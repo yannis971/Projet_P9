@@ -1,0 +1,36 @@
+{% extends 'home/base.html' %}
+
+{% block body %}
+
+<section>
+<div class="container">
+  <div class="row">
+    <div class="col align-self-center">
+      <h2>Inscrivez-vous maintenant</h2>
+      <form action="{% url 'home:register' %}" method="get">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">S'inscrire</button>
+      </form>
+    </div>
+    <div class="col align-self-center">
+      <h2>Connectez-vous</h2>
+      {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+      {% for message in messages %}
+      <p>{{message}}</p>
+      {% endfor %}
+      <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <input type="text" class="form-control" name="username" placeholder="Nom d'utilisateur">
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-control" name="password" placeholder="Mot de passe">
+        </div>
+        <button type="submit" class="btn btn-primary">Se connecter</button>
+      </form>
+    </div>
+  </div>
+</div>
+</section>
+
+{% endblock %}

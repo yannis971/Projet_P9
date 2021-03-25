@@ -1,0 +1,31 @@
+{% extends 'home/base.html' %}
+
+{% block body %}
+
+<section>
+  <h2>Inscrivez-vous</h2>
+  {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+  {% for message in messages %}
+					<p>{{message}}</p>
+				{% endfor %}
+  <form action="" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <input type="text" class="form-control" name="username" placeholder="Nom d'utilisateur">
+    </div>
+    <div class="form-group">
+      <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Email">
+      <small id="emailHelp" class="form-text text-muted">Votre email restera confidentiel et vous permettra de ré-initialiser votre mot en cas de perte.</small>
+    </div>
+    <div class="form-group">
+      <input type="password" class="form-control" name="password1" placeholder="Mot de passe">
+    </div>
+    <div class="form-group">
+      <input type="password" class="form-control" name="password2" placeholder="Confirmer votre mot de passe">
+    </div>
+    <a href="{% url 'home:index' %}"><input type="button" value="Retourner" name="rollback" formnovalidate></a>
+    <input type="submit" value="S'inscrire" name="commit">
+  </form>
+</section>
+
+{% endblock %}
