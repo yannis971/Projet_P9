@@ -1,2 +1,4 @@
 env/
 lit_review/lit_review/__pycache__/
+lit_review/home/__pycache__/
+lit_review/home/migrations/__pycache__/
