@@ -41,8 +41,10 @@ def registerUser(request):
 				user = authenticate(request, username=username, password=password)
 				if user is not None:
 					login(request, user)
+					print("redirect vers 'home:index'")
 					return HttpResponseRedirect(reverse('home:index'))
 				else:
+					print("redirect vers 'home:login'")
 					messages.info(request, "Nom d'utilisateur ou mot de passe invalide")
 					return HttpResponseRedirect(reverse('home:login'))
 		context = {'form':form}
@@ -54,7 +56,7 @@ def logoutUser(request):
 	return HttpResponseRedirect(reverse('home:login'))
 
 
-@login_required(login_url='login/')
+@login_required
 def index(request):
     context = {'user':request.user}
     return render(request, 'home/index.html', context)
