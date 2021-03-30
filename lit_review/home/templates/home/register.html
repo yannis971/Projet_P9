@@ -3,12 +3,16 @@
 {% block body %}
 
 <section>
+  <div class="container text-center">
   <h2>Inscrivez-vous</h2>
-
+  <br>
   <form action="" method="post">
     {% csrf_token %}
     <div class="form-group">
       <input type="text" class="form-control text-center" name="username" placeholder="Nom d'utilisateur">
+    </div>
+    <div class="form-group">
+      <input type="email" class="form-control text-center" name="email" placeholder="Email">
     </div>
     <div class="form-group">
       <input type="password" class="form-control text-center" name="password1" placeholder="Mot de passe">
@@ -39,6 +43,8 @@
   {% for message in messages %}
 					<p>{{message}}</p>
 				{% endfor %}
+  </div>
+  <br>
 </section>
 
 {% endblock %}
