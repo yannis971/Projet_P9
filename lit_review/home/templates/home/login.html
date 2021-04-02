@@ -1,5 +1,7 @@
 {% extends 'home/base.html' %}
 
+{% load socialaccount %}
+
 {% block body %}
 
 <section>
@@ -7,6 +9,7 @@
   <div class="row">
     <div class="col text-center align-self-center">
       <h2>Inscrivez-vous maintenant</h2>
+      <br>
       <form action="{% url 'home:register' %}" method="get">
         {% csrf_token %}
         <button type="submit" class="btn btn-primary">S'inscrire</button>
@@ -14,7 +17,7 @@
     </div>
     <div class="col text-center align-self-center">
       <h2>Connectez-vous</h2>
-      {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+      <br>
       {% for message in messages %}
       <p>{{message}}</p>
       {% endfor %}
@@ -28,6 +31,35 @@
         </div>
         <button type="submit" class="btn btn-primary">Se connecter</button>
       </form>
+      <div class="or-container">
+        <div class="line-separator"></div>
+        <div class="or-label"><h2>OU<h2></div>
+        <div class="line-separator"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <a class="btn btn-lg btn-social btn-block text-uppercase btn-outline" href="{% provider_login_url 'twitter' %}">
+            <img src="https://img.icons8.com/color/24/000000/twitter"> Twitter
+          </a>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-12">
+          <a class="btn btn-lg btn-social btn-block text-uppercase btn-outline" href="{% provider_login_url 'google' %}">
+            <img src="https://img.icons8.com/color/24/000000/google-logo.png"> Google
+          </a>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-12">
+          <a class="btn btn-lg btn-social btn-block text-uppercase btn-outline" href="{% provider_login_url 'github' %}">
+            <img src="https://img.icons8.com/color/24/000000/github"> Github
+          </a>
+        </div>
+      </div>
+      <br>
     </div>
   </div>
 </div>
