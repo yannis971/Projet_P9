@@ -6,4 +6,47 @@
 
 <h3> Bienvenue {{ user.username }} sur la page des abonnements</h3>
 
+<form action="{% url 'abonnements:create' %}" method="post">
+  {% csrf_token %}
+  <label for="user-select">Suivre d'autres utilisateurs</label>
+  <select name="followed_user_id" id="user-select">
+    <option value="">Nom d'utilisateur</option>
+    {% for user in list_of_other_users %}
+    <option value="{{ user.id }}">{{ user.username }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="btn btn-primary">Envoyer</button>
+</form>
+
+{% for message in messages %}
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+    <div class="alert alert-danger">{{message|escape}}</div>
+  {% endif %}
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+    <div class="alert alert-success">{{message|escape}}</div>
+  {% endif %}
+{% endfor %}
+
+<h3>Abonnements</h3>
+{% if list_of_following %}
+  <table>
+  {% for user_follow in list_of_following %}
+  <tr>
+    <th>{{ user_follow.followed_user.username }}</th>
+    <th><a href="{% url 'abonnements:delete' user_follow.followed_user.id  %}"><button type="button" class="btn btn-primary">Désabonner</button></a></th>
+  </tr>
+  {% endfor %}
+  </table>
+{% endif %}
+<h3>Abonnés</h3>
+{% if list_of_followed_by %}
+  <table>
+  {% for user_follow in list_of_followed_by %}
+  <tr>
+    <th>{{ user_follow.user.username }}</th>
+  </tr>
+  {% endfor %}
+  </table>
+{% endif %}
+
 {% endblock %}
