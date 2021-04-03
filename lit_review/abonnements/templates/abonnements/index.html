@@ -6,9 +6,42 @@
 
 <h3> Bienvenue {{ user.username }} sur la page des abonnements</h3>
 
+
+  <input id="search_user" class="form-control" placeholder="Rechercher un utilisateur à suivre">
+  <div id="search_user_box" style="display:none;">
+    {% for user in list_of_other_users %}
+      <b>{{ user.username}}</b> <br>
+    {% endfor %}
+  </div>
+  {% block scripts %}
+  <script>
+    const data = '{{ users_json }}'
+    const parsed_data = JSON.parse(data.replace(/&quot;/g,'"'))
+    const input = document.getElementById('search_user')
+    let filteredArr = []
+    input.addEventListener('keyup', (e) => {
+      search_user_box.style.display = "block"
+      search_user_box.innerHTML = ""
+      //filteredArr = parsed_data.filter(user => user['username'].includes(e.target.value))
+      filteredArr = parsed_data.filter(user => user['username'].startsWith(e.target.value))
+      if (filteredArr.length > 0) {
+        filteredArr.map(user => {
+            search_user_box.innerHTML += `<b>${user['username']}</b><br>`
+        })
+      } else if (filteredArr.length == 1) {
+          search_user_box.innerHTML += `<b>${user['username']}</b><br>`
+          console.log(filteredArr)
+      }
+      else {
+        search_user_box.innerHTML = 'Aucun utilisateur trouvé'
+      }
+    });
+  </script>
+  {% endblock scripts %}
 <form action="{% url 'abonnements:create' %}" method="post">
   {% csrf_token %}
   <label for="user-select">Suivre d'autres utilisateurs</label>
+
   <select name="followed_user_id" id="user-select">
     <option value="">Nom d'utilisateur</option>
     {% for user in list_of_other_users %}

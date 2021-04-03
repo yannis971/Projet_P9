@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from . import models as md
 from django.http import HttpResponse
 from django.contrib import messages
+import json
+
 
 # Create your views here.
 @login_required
@@ -16,6 +18,7 @@ def index(request):
         'list_of_other_users': list_of_other_users,
         'list_of_followed_by': list_of_followed_by,
         'list_of_following': list_of_following,
+        'users_json': json.dumps(md.list_of_other_users_values(request.user)),
         }
     return render(request, 'abonnements/index.html', context)
 
