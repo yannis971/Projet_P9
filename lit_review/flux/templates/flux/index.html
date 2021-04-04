@@ -4,6 +4,15 @@
 
 {% include 'home/navbar.html' %}
 
-<h3> Bienvenue {{ user.username }} sur la page des flux</h3>
+<div class="container">
+  <div class="row">
+    <div class="col text-center align-self-center">
+      <a href="{% url 'flux:ticket-add' %}"><button type="button" class="btn btn-primary">Demander une critique</button></a>
+    </div>
+    <div class="col text-center align-self-center">
+      <a href="{% url 'flux:review-add' %}"><button type="button" class="btn btn-primary">Créer une critique</button></a>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

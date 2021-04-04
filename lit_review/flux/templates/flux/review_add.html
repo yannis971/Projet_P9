@@ -1,0 +1,31 @@
+{% extends 'home/base.html' %}
+
+{% block body %}
+
+{% include 'home/navbar.html' %}
+<div class="container">
+  <div class="row">
+    <div class="col text-center align-self-center">
+      <h2>Créer une critique</h2>
+      <br>
+    </div>
+    <div class="row">
+      <div class="col align-self-left">
+        <form action="{% url 'flux:review-add' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <fieldset name="ticket">
+            <legend>Livre/Article</legend>
+            {% include 'flux/ticket_form.html' %}
+           </fieldset>
+           <fieldset name="review">
+             <legend>Critique</legend>
+             {% include 'flux/review_form.html' %}
+            </fieldset>
+            <div class="form-group text-right">
+              <button type="submit" class="btn btn-primary">Envoyer</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -4,51 +4,85 @@
 
 {% include 'home/navbar.html' %}
 
-<h3> Bienvenue {{ user.username }} sur la page des abonnements</h3>
+<br><h3 class="text-center">Suivre d'autres utilisateurs</h3><br>
 
-
-  <input id="search_user" class="form-control" placeholder="Rechercher un utilisateur à suivre">
-  <div id="search_user_box" style="display:none;">
-    {% for user in list_of_other_users %}
-      <b>{{ user.username}}</b> <br>
-    {% endfor %}
+<form id="user_follows" action="{% url 'abonnements:create' %}" method="post" autocomplete="on">
+  {% csrf_token %}
+  <div class="form-group">
+    <div class="row">
+      <div class="col">
+        <input id="search_user" class="form-control" placeholder="Rechercher un utilisateur à suivre">
+        <div id="search_user_box" style="display:none;">
+          {% for user in list_of_other_users %}
+            <b>{{ user.username}}</b> <br>
+          {% endfor %}
+        </div>
+        <input id="followed_user_id" name="followed_user_id" type="hidden" value="">
+      </div>
+      <div class="col text-right">
+        <button type="submit" class="btn btn-primary">Envoyer</button>
+      </div>
+    </div>
   </div>
+</form>
   {% block scripts %}
   <script>
     const data = '{{ users_json }}'
     const parsed_data = JSON.parse(data.replace(/&quot;/g,'"'))
     const input = document.getElementById('search_user')
+    const form = document.getElementById('user_follows')
+    form.elements["followed_user_id"].value = ""
     let filteredArr = []
-    input.addEventListener('keyup', (e) => {
+    input.addEventListener('keyup', (event) => {
       search_user_box.style.display = "block"
       search_user_box.innerHTML = ""
-      //filteredArr = parsed_data.filter(user => user['username'].includes(e.target.value))
-      filteredArr = parsed_data.filter(user => user['username'].startsWith(e.target.value))
-      if (filteredArr.length > 0) {
+      filteredArr = parsed_data.filter(user => user['username'].startsWith(event.target.value))
+      if (filteredArr.length > 1) {
         filteredArr.map(user => {
             search_user_box.innerHTML += `<b>${user['username']}</b><br>`
         })
       } else if (filteredArr.length == 1) {
-          search_user_box.innerHTML += `<b>${user['username']}</b><br>`
-          console.log(filteredArr)
+          filteredArr.map(user => {
+            search_user_box.innerHTML += `<b>${user['username']}</b><br>`
+            input.value = user['username']
+            console.log(filteredArr)
+            console.log(user['username'])
+            console.log(user['id'])
+            form.elements["followed_user_id"].value = user['id']
+          })
       }
       else {
         search_user_box.innerHTML = 'Aucun utilisateur trouvé'
       }
     });
+    input.addEventListener('focus', (event) => {
+      search_user_box.style.display = "block"
+    });
+    input.addEventListener('blur', (event) => {
+      search_user_box.style.display = "none"
+    });
+
+
   </script>
   {% endblock scripts %}
+
 <form action="{% url 'abonnements:create' %}" method="post">
   {% csrf_token %}
-  <label for="user-select">Suivre d'autres utilisateurs</label>
-
-  <select name="followed_user_id" id="user-select">
-    <option value="">Nom d'utilisateur</option>
-    {% for user in list_of_other_users %}
-    <option value="{{ user.id }}">{{ user.username }}</option>
-    {% endfor %}
-  </select>
-  <button type="submit" class="btn btn-primary">Envoyer</button>
+  <div class="form-group">
+    <div class="row">
+      <div class="col">
+        <select name="followed_user_id" id="user-select">
+          <option value="">Nom d'utilisateur</option>
+          {% for user in list_of_other_users %}
+          <option value="{{ user.id }}">{{ user.username }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col text-right">
+        <button type="submit" class="btn btn-primary">Envoyer</button>
+      </div>
+    </div>
+  </div>
 </form>
 
 {% for message in messages %}
@@ -60,18 +94,22 @@
   {% endif %}
 {% endfor %}
 
-<h3>Abonnements</h3>
+<br><h3 class="text-center">Abonnements</h3><br>
+
 {% if list_of_following %}
-  <table>
+  <form>
   {% for user_follow in list_of_following %}
-  <tr>
-    <th>{{ user_follow.followed_user.username }}</th>
-    <th><a href="{% url 'abonnements:delete' user_follow.followed_user.id  %}"><button type="button" class="btn btn-primary">Désabonner</button></a></th>
-  </tr>
+  <div class="form-group">
+    <div class="row">
+      <div class="col">{{ user_follow.followed_user.username }}</div>
+      <div class="col text-right"><a href="{% url 'abonnements:delete' user_follow.followed_user.id  %}"><button type="button" class="btn-secondary" formnovalidate>Désabonner</button></a></div>
+    </div>
+  </div>
   {% endfor %}
-  </table>
+  </form>
 {% endif %}
-<h3>Abonnés</h3>
+
+<br><h3 class="text-center">Abonnés</h3><br>
 {% if list_of_followed_by %}
   <table>
   {% for user_follow in list_of_followed_by %}
