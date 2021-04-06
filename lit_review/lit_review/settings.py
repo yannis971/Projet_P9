@@ -76,6 +76,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 #`allauth` needs this from django
                 'django.template.context_processors.request',
+                #to enable saving uploaded files on server
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -162,3 +164,7 @@ SOCIALACCOUNT_PROVIDERS = {
 SITE_ID = 2
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = False
+
+#Directtory to store uploaded files on server
+MEDIA_URL = "/media/"
+MEDIA_ROOT = Path.joinpath(BASE_DIR, "media/")

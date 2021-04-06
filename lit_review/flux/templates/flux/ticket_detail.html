@@ -1,0 +1,16 @@
+{% extends 'home/base.html' %}
+
+{% block body %}
+
+{% include 'home/navbar.html' %}
+
+<br><h3>Detail du ticket</h3><br>
+Ticket.id : {{ object.id }}<br>
+{{ object.title }}<br>
+{{ object.description }}<br>
+{{ object.user.username }}<br>
+{{ object.time_created }}<br>
+Image<br>
+<img src="{{ MEDIA_URL }}{{ object.image }}" /><br>
+
+{% endblock %}
