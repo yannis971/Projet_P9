@@ -13,6 +13,7 @@ class TicketForm(Form):
 """
 
 class ReviewModelForm(ModelForm):
+    ratings = [0, 1, 2, 3, 4, 5]
     class Meta:
         model = Review
         fields = ['headline', 'rating', 'body']

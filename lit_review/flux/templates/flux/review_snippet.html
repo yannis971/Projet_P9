@@ -1,0 +1,17 @@
+<br>
+{% if post.user.id == user.id %}
+<h4>Vous avez posté une critique</h4>
+{% else %}
+<h4>{{ post.user.username }} a posté une critique</h4>
+{% endif %}
+<br>
+Review.id : {{ post.id }}<br>
+{{ post.headline }}<br>
+{{ post.rating }}<br>
+{{ post.time_created }}<br>
+Ticket.id : {{ post.ticket.id }}<br>
+{{ post.ticket.title }}<br>
+{{ post.ticket.description }}<br>
+{{ post.ticket.time_created }}<br>
+Image<br>
+<img src="{{ MEDIA_URL }}{{ post.ticket.image }}" /><br>

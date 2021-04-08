@@ -15,4 +15,12 @@
   </div>
 </div>
 
+{% for post in posts %}
+    {% if post.content_type == 'TICKET' %}
+        {% include 'flux/ticket_snippet.html' %}
+    {% elif post.content_type == 'REVIEW' %}
+        {% include 'flux/review_snippet.html' %}
+    {% endif %}
+{% endfor %}
+
 {% endblock %}

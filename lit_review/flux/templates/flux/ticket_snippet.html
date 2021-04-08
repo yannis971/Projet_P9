@@ -1,0 +1,15 @@
+<br>
+{% if post.user.id == user.id %}
+<h4>Vous avez demandé une critique</h4>
+{% else %}
+<h4>{{ post.user.username }} a demandé une critique</h4>
+{% endif %}
+<br>
+<div class="form-group">
+Ticket.id : {{ post.id }}<br>
+{{ post.title }}<br>
+{{ post.description }}<br>
+{{ post.time_created }}<br>
+Image<br>
+<img src="{{ MEDIA_URL }}{{ post.image }}" /><br>
+</div>

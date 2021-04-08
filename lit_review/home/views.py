@@ -50,7 +50,7 @@ def registerUser(request):
 
 
 def logoutUser(request):
-	messages.info(request, "Vous êtes déconnecté")
+	messages.success(request, "Vous êtes déconnecté")
 	logout(request)
 	return HttpResponseRedirect(reverse('home:login'))
 

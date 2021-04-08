@@ -1,3 +1,4 @@
+from itertools import chain
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -6,85 +7,59 @@ from django.contrib import messages
 from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
 from django.views.generic import ListView
+from django.db.models import CharField, Value
+from django.contrib.auth.models import User
+from django.db.models import Q
 from django import forms
-from flux.models import Review, Ticket
+from flux.models import Review, Ticket, UserFollows
+
 #from flux.forms import ReviewForm, TicketForm
 from flux.forms import ReviewModelForm, TicketModelForm
+
+
+def get_users_viewable(user):
+    users = User.objects.filter(id=user.id).values_list('id')
+    followed_users = UserFollows.objects.filter(user=user).values_list('followed_user_id')
+    users_viewable = chain(users, followed_users)
+    return users_viewable
+
+
+def get_users_viewable_tickets(user):
+    return Ticket.objects.filter(user_id__in=get_users_viewable(user))
+
+
+def get_tickets_user(user):
+    return Ticket.objects.filter(user=user)
+
+def get_users_viewable_reviews(user):
+    users_viewable_reviews = Review.objects.filter(user=user)
+    try:
+        users_viewable_reviews = Review.objects.get(Q(ticket__in=get_tickets_user(user)) | Q(user_id__in=get_users_viewable(user)),)
+    except:
+        pass
+    return users_viewable_reviews
+
 
 # Create your views here.
 @login_required
 def index(request):
-    context = {'user':request.user}
+    reviews = get_users_viewable_reviews(request.user)
+    print("reviews", reviews)
+    # returns queryset of reviews
+    reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
+
+    tickets = get_users_viewable_tickets(request.user)
+    # returns queryset of tickets
+    tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+    # combine and sort the two types of posts
+    posts = sorted(
+        chain(reviews, tickets),
+        key=lambda post: post.time_created,
+        reverse=True
+    )
+    context = {'user':request.user, 'posts': posts }
     return render(request, 'flux/index.html', context)
 
-"""
-class TicketForm(forms.ModelForm):
-    model = Ticket
-    fields = ['title', 'description', 'image']
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-class TicketCreate(LoginRequiredMixin, CreateView):
-    model = Ticket
-    fields = ['title', 'description', 'image']
-    template_name = 'ticket_add.html'
-    #success_url = reverse('flux:index')
-    success_url = reverse_lazy('index')
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-
-class ReviewCreate(LoginRequiredMixin, CreateView):
-    model = Review
-    fields = ['headline', 'body']
-    template_name = 'review_add.html'
-    #success_url = reverse('flux:index')
-    success_url = reverse_lazy('flux:index')
-
-    def form_valid(self, form):
-        ticket = TicketForm(request.POST).form_valid(form)
-        form.instance.ticket = ticket
-        form.instance.rating = int(self.request.POST.get('rating'))
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-"""
-"""
-@login_required
-def review_add(request):
-    if request.method == 'POST':
-        form = ReviewForm(request.POST)
-        ticket = TicketForm(request.POST).form_valid(form)
-        form.instance.ticket = ticket
-        form.instance.rating = int(request.POST.get('rating'))
-        form.instance.user = request.user
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Création critique OK")
-            return HttpResponseRedirect(reverse('flux:index'))
-    else:
-        form = ReviewForm()
-    context = {'form':form, 'ratings': [0, 1, 2, 3, 4, 5]}
-    return render(request, 'flux/review_add.html', context)
-
-@login_required
-def ticket_add(request):
-    if request.method == 'POST':
-        form = TicketForm(request.POST)
-        form.model.user = request.user
-        if form.is_valid():
-#la methode save n'xiste pas fans django.forms.Form
-            form.save()
-            messages.success(request, "Demande de critique OK")
-            return HttpResponseRedirect(reverse('flux:index'))
-    else:
-        form = TicketForm()
-    context = {'form':form}
-    return render(request, 'flux/ticket_add.html', context)
-"""
 
 class TicketCreate(LoginRequiredMixin, CreateView):
     form_class = TicketModelForm
@@ -94,6 +69,7 @@ class TicketCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
 
 class TicketDetail(LoginRequiredMixin, DetailView):
     context_object_name = 'ticket_detail'

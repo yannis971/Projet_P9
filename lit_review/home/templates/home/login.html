@@ -19,7 +19,12 @@
       <h2>Connectez-vous</h2>
       <br>
       {% for message in messages %}
-      <p>{{message}}</p>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+          <div class="alert alert-danger">{{message|escape}}</div>
+        {% endif %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+          <div class="alert alert-success">{{message|escape}}</div>
+        {% endif %}
       {% endfor %}
       <form action="" method="post">
         {% csrf_token %}
