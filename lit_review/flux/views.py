@@ -1,6 +1,7 @@
 from itertools import chain
 from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -34,9 +35,11 @@ def get_tickets_user(user):
 def get_users_viewable_reviews(user):
     users_viewable_reviews = Review.objects.filter(user=user)
     try:
-        users_viewable_reviews = Review.objects.get(Q(ticket__in=get_tickets_user(user)) | Q(user_id__in=get_users_viewable(user)),)
+        users_viewable_reviews = Review.objects.filter(Q(
+            ticket__in=get_tickets_user(user)) | Q(user_id__in=get_users_viewable(user)))
     except:
         pass
+
     return users_viewable_reviews
 
 
@@ -44,13 +47,13 @@ def get_users_viewable_reviews(user):
 @login_required
 def index(request):
     reviews = get_users_viewable_reviews(request.user)
-    print("reviews", reviews)
     # returns queryset of reviews
     reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
 
     tickets = get_users_viewable_tickets(request.user)
     # returns queryset of tickets
     tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+
     # combine and sort the two types of posts
     posts = sorted(
         chain(reviews, tickets),
@@ -84,7 +87,7 @@ class TicketList(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return Ticket.objects.filter(user=self.request.user).order_by('-time_created')
 
-
+"""
 class ReviewCreate(LoginRequiredMixin, CreateView):
     form_class = ReviewModelForm
     template_name = 'flux/review_form.html'
@@ -93,6 +96,26 @@ class ReviewCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+"""
+
+
+@login_required
+def createReview(request):
+    if request.method =='POST':
+        ticket_form = TicketModelForm(request.POST)
+        review_form = ReviewModelForm(request.POST)
+        if ticket_form.is_valid() and review_form.is_valid():
+            ticket_form.instance.user = request.user
+            review_form.instance.ticket = ticket_form.save()
+            review_form.instance.user = request.user
+            review_form.save()
+            return HttpResponseRedirect(reverse('flux:review-list'))
+    else:
+        ticket_form = TicketModelForm()
+        review_form = ReviewModelForm()
+    return render(request, 'flux/review_form.html',
+                  {'ticket_form': ticket_form, 'review_form': review_form})
 
 
 class ReviewDetail(LoginRequiredMixin, DetailView):

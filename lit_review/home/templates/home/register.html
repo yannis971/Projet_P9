@@ -23,7 +23,7 @@
     <a href="{% url 'home:index' %}"><button type="button" class="btn btn-primary" formnovalidate>Retourner</button></a>
     <button type="submit" class="btn btn-primary">S'inscrire</button>
   </form>
-  {% if form.errors %}
+{% if form.errors %}
     {% for error in form.errors %}
     <p>{{ error }}</p>
     {% endfor %}
