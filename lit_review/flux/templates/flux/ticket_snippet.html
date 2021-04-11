@@ -1,15 +1,28 @@
-<br>
-{% if post.user.id == user.id %}
-<h4>Vous avez demandé une critique</h4>
-{% else %}
-<h4>{{ post.user.username }} a demandé une critique</h4>
-{% endif %}
-<br>
-<div class="form-group">
-Ticket.id : {{ post.id }}<br>
-{{ post.title }}<br>
-{{ post.description }}<br>
-{{ post.time_created }}<br>
-Image<br>
-<img src="{{ MEDIA_URL }}{{ post.image }}" /><br>
-</div>
+
+  <div class="row">
+    {% if post.user.id == user.id %}
+      <div class="col text-left">Vous avez demandé une critique</div>
+    {% else %}
+      <div class="col text-left">{{ post.user.username }} a demandé une critique</div>
+    {% endif %}
+    <div class="col text-right">
+      {{ post.time_created }}
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col text-left">{{ post.title }}</div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col text-left">{{ post.description }}</div>
+  </div>
+  <br>
+  <div class="row">
+    {% if post.image %}
+      <div class="col text-left"><img src="{{ MEDIA_URL }}{{ post.image }}" /></div>
+    {% else %}
+      <div class="col text-left">Pas d'image</div>
+    {% endif %}
+  </div>
+  <br>

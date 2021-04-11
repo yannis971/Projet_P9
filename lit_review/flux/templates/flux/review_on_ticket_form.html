@@ -11,18 +11,27 @@
     </div>
     <div class="row">
       <div class="col align-self-left">
-        <form action="{% url 'flux:review-add' %}" method="post" enctype="multipart/form-data">
+        <form action="{% url 'flux:review-add-on-ticket' ticket_id %}" method="post" enctype="multipart/form-data">
           {% csrf_token %}
           <fieldset name="ticket">
             <legend>Livre/Article</legend>
-            {% include 'flux/ticket_form_fields.html' %}
+            <div class="form-group">
+              {{ review_form.instance.ticket.title }}
+            </div>
+            <label for="description">Description</label><br>
+            <div class="form-group">
+              {{ review_form.instance.ticket.description }}
+            </div>
+            <label for="image">Image</label><br>
+            <div class="form-group">
+              <img src="{{ MEDIA_URL }}{{ review_form.instance.ticket.image }}" /><br>
+            </div>
            </fieldset>
            <fieldset name="review">
              <legend>Critique</legend>
              {% include 'flux/review_form_fields.html' %}
             </fieldset>
             <div class="form-group text-right">
-              <a href="{% url 'flux:index' %}"><button type="button" class="btn btn-primary" formnovalidate>Abandonner</button></a>
               <button type="submit" class="btn btn-primary">Envoyer</button>
             </div>
         </form>

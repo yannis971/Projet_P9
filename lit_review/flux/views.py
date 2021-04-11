@@ -1,5 +1,5 @@
 from itertools import chain
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
@@ -42,6 +42,8 @@ def get_users_viewable_reviews(user):
 
     return users_viewable_reviews
 
+def get_tickets_user_locked(user):
+    return Review.objects.filter(user=user).values('ticket_id')
 
 # Create your views here.
 @login_required
@@ -60,19 +62,23 @@ def index(request):
         key=lambda post: post.time_created,
         reverse=True
     )
-    context = {'user':request.user, 'posts': posts }
+    locked_tickets = [item['ticket_id'] for item in list(get_tickets_user_locked(request.user))]
+    print("locked_tickets", locked_tickets)
+    context = {'user':request.user, 'posts': posts, 'ratings' : ReviewModelForm.ratings, 'locked_tickets': locked_tickets}
     return render(request, 'flux/index.html', context)
 
 
 class TicketCreate(LoginRequiredMixin, CreateView):
     form_class = TicketModelForm
     template_name = 'flux/ticket_form.html'
-    success_url = reverse_lazy('flux:ticket-list')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
+    def get_success_url(self):
+        messages.success(self.request, "Le ticket a été créé avec succes")
+        return reverse("posts:index")
 
 class TicketDetail(LoginRequiredMixin, DetailView):
     context_object_name = 'ticket_detail'
@@ -110,12 +116,36 @@ def createReview(request):
             review_form.instance.ticket = ticket_form.save()
             review_form.instance.user = request.user
             review_form.save()
-            return HttpResponseRedirect(reverse('flux:review-list'))
+            messages.success(request, "La critique a été créée avec succes")
+            return HttpResponseRedirect(reverse('posts:index'))
     else:
         ticket_form = TicketModelForm()
         review_form = ReviewModelForm()
     return render(request, 'flux/review_form.html',
                   {'ticket_form': ticket_form, 'review_form': review_form})
+
+
+@login_required
+def createReviewOnTicket(request, ticket_id):
+    if request.method =='POST':
+        review_form = ReviewModelForm(request.POST)
+        if review_form.is_valid():
+            id = int(ticket_id)
+            review_form.instance.ticket = get_object_or_404(Ticket,pk=id)
+            review_form.instance.user = request.user
+            review_form.save()
+            messages.success(request, f"La critique a été créée avec succes")
+            return HttpResponseRedirect(reverse('posts:index'))
+    else:
+        review_form = ReviewModelForm()
+        id = 0
+        try:
+            id = int(ticket_id)
+            review_form.instance.ticket = get_object_or_404(Ticket,pk=id)
+        except ValueError:
+            messages.info(request, "Identifiant ticket non numérique")
+        context = {'review_form': review_form, 'ticket_id': id}
+    return render(request, 'flux/review_on_ticket_form.html', context)
 
 
 class ReviewDetail(LoginRequiredMixin, DetailView):

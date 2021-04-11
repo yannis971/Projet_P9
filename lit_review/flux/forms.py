@@ -3,16 +3,6 @@ from django.forms.models import ModelForm
 from django.db import models
 from home.models import Review, Ticket
 
-"""
-class ReviewForm(Form):
-	model = Review
-	fields = ['headline', 'rating', 'body']
-
-class TicketForm(Form):
-    model = Ticket
-    fields = ['title', 'description', 'image']
-"""
-
 
 class ReviewModelForm(ModelForm):
     ratings = [0, 1, 2, 3, 4, 5]

@@ -1,17 +1,56 @@
-<br>
-{% if post.user.id == user.id %}
-<h4>Vous avez posté une critique</h4>
-{% else %}
-<h4>{{ post.user.username }} a posté une critique</h4>
-{% endif %}
-<br>
-Review.id : {{ post.id }}<br>
-{{ post.headline }}<br>
-{{ post.rating }}<br>
-{{ post.time_created }}<br>
-Ticket.id : {{ post.ticket.id }}<br>
-{{ post.ticket.title }}<br>
-{{ post.ticket.description }}<br>
-{{ post.ticket.time_created }}<br>
-Image<br>
-<img src="{{ MEDIA_URL }}{{ post.ticket.image }}" /><br>
+
+  <div class="row">
+    {% if post.user.id == user.id %}
+      <div class="col text-left">Vous avez publié une critique</div>
+    {% else %}
+      <div class="col text-left">{{ post.user.username }} a publié une critique</div>
+    {% endif %}
+    <div class="col text-right">
+      {{ post.time_created }}
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col text-left">{{ post.headline }} - Note : {{ post.rating }} -
+      {% for i in ratings %}
+        {% if i != 0 %}
+          {% if i > post.rating %}
+            <i class="fa fa-star"></i>
+          {% else %}
+    		    <i class="fa fa-star gold"></i>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col text-left">{{ post.body }}</div>
+  </div>
+  <br>
+  <div class="ticket_snippet">
+    <div class="row">
+      <div class="col text-left"> Ticket - {{ post.ticket.user.username}}</div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col text-left"> {{ post.ticket.title }}</div>
+    </div>
+    <br>
+    <div class="row">
+      {% if post.ticket.image %}
+        <div class="col text-left"><img src="{{ MEDIA_URL }}{{ post.ticket.image }}" /></div>
+      {% else %}
+        <div class="col text-left">Pas d'image</div>
+      {% endif %}
+    </div>
+    <br>
+    {% if post.ticket.id not in locked_tickets %}
+    <div class="row">
+      <div class="col text-right">
+        <a href="{% url 'flux:review-add-on-ticket' post.ticket.id %}"><button type="button" class="btn btn-primary">Créer une critique</button></a>
+      </div>
+    </div>
+    <br>
+    {% endif %}
+  </div>

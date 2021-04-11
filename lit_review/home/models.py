@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
 from django.db import models
+from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 
 

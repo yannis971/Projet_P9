@@ -1,0 +1,90 @@
+{% extends 'home/base.html' %}
+
+{% block body %}
+
+{% include 'home/navbar.html' %}
+
+<div class="container">
+  <div class="row">
+    <div class="col text-center align-self-center">
+      <h3>Modifier votre critique</h3>
+      <br>
+    </div>
+  </div>
+  <div class="ticket_snippet">
+    <div class="row">
+      <div class="col text-center"><h4>Livre/Article</h4></div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col">
+          <label>Titre</label><br>
+          <div class="form-group">{{ form.instance.ticket.title }}</div>
+          <label>Description</label><br>
+          <div class="form-group">{{form.instance.ticket.description }}</div>
+          {% if form.instance.ticket.image %}
+            <label>Image</label><br>
+            <div class="col text-left"><img src="{{ MEDIA_URL }}{{ form.instance.ticket.image }}" /></div>
+          {% else %}
+            <label>Pas d'image</label><br>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="review_snippet">
+    <div class="row">
+      <div class="col text-center"><h4>Critique</h4></div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <form action="" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <label for="headline">Titre</label><br>
+          <div class="form-group">
+            <input type="text" class="form-control" name="headline" id="headline" required minlength="1" maxlength="128" size="128" value="{{ form.headline.value }}">
+          </div>
+          <label>Note</label><br>
+          <div class="form-group">
+            {% for i in form.ratings %}
+              {% if i == form.rating.value %}
+                <input type="radio" name="rating" id="rating-{{ i }}" value="{{ i }}" checked>
+              {% else %}
+                <input type="radio" name="rating" id="rating-{{ i }}" value="{{ i }}">
+              {% endif %}
+              <label for="rating-{{ i }}"> - {{ i }}</label>
+            {% endfor %}
+          </div>
+          <label for="body">Commentaire</label><br>
+          <div class="form-group">
+            <textarea class="form-control" name="body" id="body" maxlength="8192" rows="8">{{ form.body.value }}</textarea>
+          </div>
+          <div class="form-group text-right">
+            <a href="{% url 'posts:index' %}"><button type="button" class="btn btn-primary" formnovalidate>Annuler</button></a>
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if form.errors %}
+    {% for error in form.errors %}
+    <p>{{ error }}</p>
+    {% endfor %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

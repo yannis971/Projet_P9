@@ -3,24 +3,32 @@
 {% block body %}
 
 {% include 'home/navbar.html' %}
-
-<div class="container">
-  <div class="row">
-    <div class="col text-center align-self-center">
-      <a href="{% url 'flux:ticket-add' %}"><button type="button" class="btn btn-primary">Demander une critique</button></a>
-    </div>
-    <div class="col text-center align-self-center">
-      <a href="{% url 'flux:review-add' %}"><button type="button" class="btn btn-primary">Créer une critique</button></a>
+  <div class="container">
+    <div class="row">
+      <div class="col text-center align-self-center">
+        <a href="{% url 'flux:ticket-add' %}"><button type="button" class="btn btn-primary">Demander une critique</button></a>
+      </div>
+      <div class="col text-center align-self-center">
+        <a href="{% url 'flux:review-add' %}"><button type="button" class="btn btn-primary">Créer une critique</button></a>
+      </div>
     </div>
   </div>
-</div>
-
-{% for post in posts %}
+  <br>
+  {% for post in posts %}
     {% if post.content_type == 'TICKET' %}
-        {% include 'flux/ticket_snippet.html' %}
+      <div class="ticket_snippet">{% include 'flux/ticket_snippet.html' %}
+        {% if post.id not in locked_tickets %}
+          <div class="row">
+            <div class="col text-right">
+              <a href="{% url 'flux:review-add-on-ticket' post.id %}"><button type="button" class="btn btn-primary">Créer une critique</button></a>
+            </div>
+          </div>
+          <br>
+        {% endif %}
+      </div>
     {% elif post.content_type == 'REVIEW' %}
-        {% include 'flux/review_snippet.html' %}
+      <div class="review_snippet">{% include 'flux/review_snippet.html' %}</div>
     {% endif %}
-{% endfor %}
+  {% endfor %}
 
 {% endblock %}

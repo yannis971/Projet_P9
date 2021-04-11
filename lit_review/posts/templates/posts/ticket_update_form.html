@@ -1,0 +1,60 @@
+{% extends 'home/base.html' %}
+
+{% block body %}
+
+{% include 'home/navbar.html' %}
+
+<div class="container">
+  <div class="row">
+    <div class="col text-center align-self-center">
+      <h3>Modifier votre ticket</h3>
+      <br>
+    </div>
+    <div class="row">
+      <div class="col">
+        <form action="" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <label for="title">Titre</label><br>
+          <div class="form-group">
+            <input type="text" class="form-control" name="title" id="title" required minlength="1" maxlength="128" size="128" value="{{ form.title.value }}">
+          </div>
+          <label for="description">Description</label><br>
+          <div class="form-group">
+            <textarea class="form-control" name="description" id="description" maxlength="2048" rows="8">{{ form.description.value }}</textarea>
+          </div>
+          <label for="image">Image</label><br>
+          <div class="col text-left">
+            <img src="{{ MEDIA_URL }}{{ form.image.value }}" />
+          </div>
+          <div class="form-group">
+            <input type="file" name="image" id="image" accept="image/png, image/jpeg" title="Modifier l'image">
+          </div>
+          <div class="form-group text-right">
+            <a href="{% url 'posts:index' %}"><button type="button" class="btn btn-primary" formnovalidate>Annuler</button></a>
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if form.errors %}
+    {% for error in form.errors %}
+    <p>{{ error }}</p>
+    {% endfor %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

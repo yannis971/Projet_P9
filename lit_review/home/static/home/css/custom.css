@@ -1,0 +1,30 @@
+/* Par défaut, une étoile est en gris foncé,
+   avec un padding et un curseur en forme de main. */
+/* Si elle porte en plus la classe '.gold', elle sera en jaune. */
+.fa-star.gold {
+	color: #ffdc0f;
+}
+
+.ticket_snippet {
+	border: 1px solid black;
+	padding: 10px;
+	background-color: white;
+}
+
+.review_snippet {
+	border: 1px solid black;
+	padding: 10px;
+	background-color: rgba(200,200,200,0.8);
+  background-blend-mode: lighten;
+}
+
+#fond_de_page {
+	background-image: url('/static/home/img/lit_review.png');
+	background-color: rgba(255,255,255,0.6);
+  background-blend-mode: lighten;
+}
+
+#bloc_de_page {
+	background-color: white;
+	z-index: 1;
+}
