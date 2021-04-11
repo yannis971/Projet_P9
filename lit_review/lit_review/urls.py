@@ -27,3 +27,5 @@ urlpatterns = [
     path('home/', include('home.urls')),
     path('posts/', include('posts.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = 'home.views.handler404'

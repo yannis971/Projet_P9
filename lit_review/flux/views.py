@@ -142,7 +142,7 @@ def createReviewOnTicket(request, ticket_id):
             review_form.instance.user = request.user
             review_form.save()
             messages.success(request, f"La critique a été créée avec succes")
-            return HttpResponseRedirect(reverse('posts:index'))    
+            return HttpResponseRedirect(reverse('posts:index'))
     context = {'review_form': review_form, 'ticket_id': id}
     return render(request, 'flux/review_on_ticket_form.html', context)
 

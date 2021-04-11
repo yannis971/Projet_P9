@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -59,3 +59,7 @@ def logoutUser(request):
 def index(request):
     context = {'user':request.user}
     return render(request, 'home/index.html', context)
+
+def handler404(request, *args, **argv):
+	context = {'args': args, 'argv': argv}
+	return render(request, 'home/handler404.html', context)

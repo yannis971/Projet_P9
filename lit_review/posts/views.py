@@ -11,7 +11,6 @@ from posts.models import Review, Ticket
 from flux.forms import ReviewModelForm, TicketModelForm
 
 
-
 # Create your views here.
 @login_required
 def index(request):
