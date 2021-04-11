@@ -127,6 +127,13 @@ def createReview(request):
 
 @login_required
 def createReviewOnTicket(request, ticket_id):
+    review_form = ReviewModelForm()
+    id = 0
+    try:
+        id = int(ticket_id)
+        review_form.instance.ticket = get_object_or_404(Ticket,pk=id)
+    except ValueError:
+        messages.info(request, "Identifiant ticket non numérique")
     if request.method =='POST':
         review_form = ReviewModelForm(request.POST)
         if review_form.is_valid():
@@ -135,16 +142,8 @@ def createReviewOnTicket(request, ticket_id):
             review_form.instance.user = request.user
             review_form.save()
             messages.success(request, f"La critique a été créée avec succes")
-            return HttpResponseRedirect(reverse('posts:index'))
-    else:
-        review_form = ReviewModelForm()
-        id = 0
-        try:
-            id = int(ticket_id)
-            review_form.instance.ticket = get_object_or_404(Ticket,pk=id)
-        except ValueError:
-            messages.info(request, "Identifiant ticket non numérique")
-        context = {'review_form': review_form, 'ticket_id': id}
+            return HttpResponseRedirect(reverse('posts:index'))    
+    context = {'review_form': review_form, 'ticket_id': id}
     return render(request, 'flux/review_on_ticket_form.html', context)
 
 

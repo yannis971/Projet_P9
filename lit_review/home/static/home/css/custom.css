@@ -14,17 +14,27 @@
 .review_snippet {
 	border: 1px solid black;
 	padding: 10px;
-	background-color: rgba(200,200,200,0.8);
+	background-color: rgba(200,200,200,0.6);
+	/*background-color: rgba(170,240,209,0.8);*/
   background-blend-mode: lighten;
 }
 
 #fond_de_page {
 	background-image: url('/static/home/img/lit_review.png');
-	background-color: rgba(255,255,255,0.6);
+	/*background-color: rgba(255,255,255,0.6);*/
+	background-color: rgba(200,200,200,0.6);
   background-blend-mode: lighten;
 }
 
 #bloc_de_page {
 	background-color: white;
-	z-index: 1;
+}
+
+#search_user_box {
+	border: 1px solid #80bdff;
+	box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+	padding: 10px;
+	background-color: rgba(200,200,200,0.2);
+  background-blend-mode: lighten;
+	z-index:1;
 }
