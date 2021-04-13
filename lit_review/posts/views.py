@@ -6,20 +6,24 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import UpdateView, DeleteView
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from posts.models import Review, Ticket
 from flux.forms import ReviewModelForm, TicketModelForm
 
 
-# Create your views here.
-@login_required
-def index(request):
-    reviews = Review.objects.filter(user=request.user)
+def get_tickets_user_locked(user_object):
+    reviews = Review.objects.filter(user=user_object)
+    return [item['ticket_id'] for item in list(reviews.values('ticket_id'))]
+
+
+def get_user_posts(user_object):
+    reviews = Review.objects.filter(user=user_object)
     locked_tickets = [item['ticket_id'] for item in list(reviews.values('ticket_id'))]
     # returns queryset of reviews
     reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
 
-    tickets = Ticket.objects.filter(user=request.user)
+    tickets = Ticket.objects.filter(user=user_object)
     # returns queryset of tickets
     tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
 
@@ -30,7 +34,30 @@ def index(request):
         reverse=True
     )
 
-    context = {'user':request.user, 'posts': posts, 'ratings' : ReviewModelForm.ratings, 'locked_tickets': locked_tickets}
+    return posts
+
+
+# Create your views here.
+@login_required
+def index(request):
+    object_list = get_user_posts(request.user)
+    paginator = Paginator(object_list, 3)  # 3 posts in each page
+    page = request.GET.get('page')
+
+    try:
+        post_list = paginator.page(page)
+    except PageNotAnInteger:
+            # If page is not an integer deliver the first page
+        post_list = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range deliver last page of results
+        post_list = paginator.page(paginator.num_pages)
+
+    context = {'page': page, 'post_list': post_list,
+        'ratings' : ReviewModelForm.ratings,
+        'locked_tickets': get_tickets_user_locked(request.user)
+     }
+
     return render(request, 'posts/index.html', context)
 
 

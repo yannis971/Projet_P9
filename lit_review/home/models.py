@@ -14,6 +14,11 @@ class Ticket(models.Model):
     image = models.ImageField(null=True, blank=True,upload_to='images/')
     time_created = models.DateTimeField(default=timezone.now)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['title', 'user'], name='unique_ticket'),
+        ]
+
 
 class Review(models.Model):
     ticket = models.ForeignKey(to=Ticket, on_delete=models.CASCADE)
@@ -25,6 +30,11 @@ class Review(models.Model):
     user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['ticket', 'user'], name='unique_review'),
+        ]
 
 
 class UserFollows(models.Model):

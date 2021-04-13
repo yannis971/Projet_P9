@@ -1,12 +1,22 @@
 <label for="title">Titre</label><br>
 <div class="form-group">
-  <input type="text" class="form-control" name="title" id="title" required minlength="1" maxlength="128" size="128">
+  <input type="text" class="form-control" name="title" id="title" required minlength="1" maxlength="128" size="128"
+    {% if ticket_form.title %}
+      value="{{ ticket_form.title.value }}"
+    {% endif %}
+  >
 </div>
 <label for="description">Description</label><br>
 <div class="form-group">
-  <textarea class="form-control" name="description" id="description" maxlength="2048" rows="8"></textarea>
+  <textarea class="form-control" name="description" id="description" maxlength="2048" rows="8">
+    {% if ticket_form.description %}{{ ticket_form.description.value }}{% endif %}
+  </textarea>
 </div>
 <label for="image">Image</label><br>
 <div class="form-group">
-  <input type="file" name="image" id="image" accept="image/png, image/jpeg">
+  <input type="file" name="image" id="image" accept="image/png, image/jpeg"
+  {% if ticket_form.title %}
+      value="{{ ticket_form.image.value }}"
+    {% endif %}
+  >
 </div>

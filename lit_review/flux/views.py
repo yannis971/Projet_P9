@@ -12,7 +12,8 @@ from django.db.models import CharField, Value
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django import forms
-from flux.models import Review, Ticket, UserFollows
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from flux.models import Review, Ticket, UserFollows, IntegrityError
 
 #from flux.forms import ReviewForm, TicketForm
 from flux.forms import ReviewModelForm, TicketModelForm
@@ -57,14 +58,27 @@ def index(request):
     tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
 
     # combine and sort the two types of posts
-    posts = sorted(
+    object_list = sorted(
         chain(reviews, tickets),
         key=lambda post: post.time_created,
         reverse=True
     )
+
+    paginator = Paginator(object_list, 3)  # 3 posts in each page
+    page = request.GET.get('page')
+
+    try:
+        post_list = paginator.page(page)
+    except PageNotAnInteger:
+            # If page is not an integer deliver the first page
+        post_list = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range deliver last page of results
+        post_list = paginator.page(paginator.num_pages)
+
     locked_tickets = [item['ticket_id'] for item in list(get_tickets_user_locked(request.user))]
-    print("locked_tickets", locked_tickets)
-    context = {'user':request.user, 'posts': posts, 'ratings' : ReviewModelForm.ratings, 'locked_tickets': locked_tickets}
+
+    context = {'user':request.user, 'post_list': post_list, 'ratings' : ReviewModelForm.ratings, 'locked_tickets': locked_tickets}
     return render(request, 'flux/index.html', context)
 
 
@@ -72,9 +86,13 @@ class TicketCreate(LoginRequiredMixin, CreateView):
     form_class = TicketModelForm
     template_name = 'flux/ticket_form.html'
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+    def form_valid(self, ticket_form):
+        ticket_form.instance.user = self.request.user
+        try:
+            return super().form_valid(ticket_form)
+        except IntegrityError:
+            messages.info(self.request, f"Vous avez déjà créé un ticket avec le même titre : {ticket_form.instance.title}")
+            return render(self.request, self.template_name, {'ticket_form': ticket_form})
 
     def get_success_url(self):
         messages.success(self.request, "Le ticket a été créé avec succes")
@@ -108,26 +126,33 @@ class ReviewCreate(LoginRequiredMixin, CreateView):
 
 @login_required
 def createReview(request):
+    template_name = 'flux/review_form.html'
     if request.method =='POST':
         ticket_form = TicketModelForm(request.POST)
         review_form = ReviewModelForm(request.POST)
         if ticket_form.is_valid() and review_form.is_valid():
-            ticket_form.instance.user = request.user
-            review_form.instance.ticket = ticket_form.save()
-            review_form.instance.user = request.user
-            review_form.save()
-            messages.success(request, "La critique a été créée avec succes")
-            return HttpResponseRedirect(reverse('posts:index'))
+            try:
+                ticket_form.instance.user = request.user
+                review_form.instance.ticket = ticket_form.save()
+            except IntegrityError:
+                messages.info(self.request, f"Vous avez déjà créé un ticket avec le même titre : {ticket_form.instance.title}")
+                return render(self.request, template_name, {'ticket_form': ticket_form, 'review_form': review_form})
+            else:
+                review_form.instance.user = request.user
+                review_form.save()
+                messages.success(request, "La critique a été créée avec succes")
+                return HttpResponseRedirect(reverse('posts:index'))
     else:
         ticket_form = TicketModelForm()
         review_form = ReviewModelForm()
-    return render(request, 'flux/review_form.html',
+    return render(request, template_name ,
                   {'ticket_form': ticket_form, 'review_form': review_form})
 
 
 @login_required
 def createReviewOnTicket(request, ticket_id):
     review_form = ReviewModelForm()
+    template_name = 'flux/review_on_ticket_form.html'
     id = 0
     try:
         id = int(ticket_id)
@@ -140,11 +165,16 @@ def createReviewOnTicket(request, ticket_id):
             id = int(ticket_id)
             review_form.instance.ticket = get_object_or_404(Ticket,pk=id)
             review_form.instance.user = request.user
-            review_form.save()
-            messages.success(request, f"La critique a été créée avec succes")
-            return HttpResponseRedirect(reverse('posts:index'))
+            try:
+                review_form.save()
+            except IntegrityError:
+                messages.info(self.request, f"Vous avez déjà créé une critique sur le ticket N° : {review_form.instance.ticket.id}")
+                return render(self.request, template_name, {'ticket_form': ticket_form, 'review_form': review_form})
+            else:
+                messages.success(request, f"La critique a été créée avec succes")
+                return HttpResponseRedirect(reverse('posts:index'))
     context = {'review_form': review_form, 'ticket_id': id}
-    return render(request, 'flux/review_on_ticket_form.html', context)
+    return render(request, template_name, context)
 
 
 class ReviewDetail(LoginRequiredMixin, DetailView):

@@ -14,7 +14,7 @@
   {% endif %}
 {% endfor %}
 
-{% for post in posts %}
+{% for post in post_list %}
   {% if post.content_type == 'TICKET' %}
     <div class="ticket_snippet">{% include 'flux/ticket_snippet.html' %}
       <br>
@@ -40,5 +40,7 @@
     </div>
   {% endif %}
 {% endfor %}
+
+{% include 'flux/pagination_posts_snippet.html' %}
 
 {% endblock %}

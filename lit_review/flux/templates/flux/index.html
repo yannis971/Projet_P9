@@ -14,7 +14,7 @@
     </div>
   </div>
   <br>
-  {% for post in posts %}
+  {% for post in post_list %}
     {% if post.content_type == 'TICKET' %}
       <div class="ticket_snippet">{% include 'flux/ticket_snippet.html' %}
         {% if post.id not in locked_tickets %}
@@ -30,5 +30,5 @@
       <div class="review_snippet">{% include 'flux/review_snippet.html' %}</div>
     {% endif %}
   {% endfor %}
-
+  {% include 'flux/pagination_posts_snippet.html' %}
 {% endblock %}

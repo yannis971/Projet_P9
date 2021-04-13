@@ -4,6 +4,15 @@
 
 {% include 'home/navbar.html' %}
 
+{% for message in messages %}
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+    <div class="alert alert-danger">{{message|escape}}</div>
+  {% endif %}
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+    <div class="alert alert-success">{{message|escape}}</div>
+  {% endif %}
+{% endfor %}
+
 <div class="container">
   <div class="row">
     <div class="col text-center align-self-center">
