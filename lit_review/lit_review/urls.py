@@ -19,6 +19,10 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.views.static import serve
+
+path('<path:path>', serve, {'document_root': '/path/to/my/files/'})
+
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('admin/', admin.site.urls),
@@ -26,6 +30,11 @@ urlpatterns = [
     path('flux/', include('flux.urls')),
     path('home/', include('home.urls')),
     path('posts/', include('posts.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('media/', serve, {'document_root': settings.MEDIA_ROOT }),
+]
 
 handler404 = 'home.views.handler404'
+
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

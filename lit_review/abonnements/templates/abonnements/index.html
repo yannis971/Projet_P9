@@ -46,9 +46,6 @@
           filteredArr.map(user => {
             search_user_box.innerHTML += `<b>${user['username']}</b><br>`
             input.value = user['username']
-            console.log(filteredArr)
-            console.log(user['username'])
-            console.log(user['id'])
             form.elements["followed_user_id"].value = user['id']
           })
       }
@@ -114,7 +111,7 @@
   <div class="form-group">
     <div class="row">
       <div class="col" >{{ user_follow.followed_user.username }}</div>
-      <div class="col text-right" style="border: 1px solid black;"><a href="{% url 'abonnements:delete' user_follow.followed_user.id  %}"><button type="button" class="btn-secondary" formnovalidate>Désabonner</button></a></div>
+      <div class="col text-right"><a href="{% url 'abonnements:delete' user_follow.followed_user.id  %}"><button type="button" class="btn-secondary" formnovalidate>Désabonner</button></a></div>
     </div>
   </div>
   {% endfor %}

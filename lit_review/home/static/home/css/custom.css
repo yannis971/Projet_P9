@@ -7,13 +7,13 @@
 
 .ticket_snippet {
 	border: 1px solid black;
-	padding: 10px;
+	padding: 20px;
 	background-color: white;
 }
 
 .review_snippet {
 	border: 1px solid black;
-	padding: 10px;
+	padding: 20px;
 	background-color: rgba(200,200,200,0.6);
 	/*background-color: rgba(170,240,209,0.8);*/
   background-blend-mode: lighten;

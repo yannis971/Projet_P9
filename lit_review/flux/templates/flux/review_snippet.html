@@ -1,4 +1,4 @@
-
+{% load static %}
   <div class="row">
     {% if post.user.id == user.id %}
       <div class="col text-left">Vous avez publié une critique</div>
@@ -11,7 +11,7 @@
   </div>
   <br>
   <div class="row">
-    <div class="col text-left">{{ post.headline }} - Note : {{ post.rating }} -
+    <div class="col text-left">{{ post.headline }} -
       {% for i in ratings %}
         {% if i != 0 %}
           {% if i > post.rating %}
@@ -39,7 +39,8 @@
     <br>
     <div class="row">
       {% if post.ticket.image %}
-        <div class="col text-left"><img src="{{ MEDIA_URL }}{{ post.ticket.image }}" /></div>
+        <div class="col text-left"><a href="{{MEDIA_URL}}{{ post.ticket.image }}" ><img src="{{ post.ticket.image.url }}"/></a>
+        </div>
       {% else %}
         <div class="col text-left">Pas d'image</div>
       {% endif %}

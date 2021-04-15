@@ -25,7 +25,7 @@ SECRET_KEY = 'oqk0!!xu*+7a)63ma%j!wrr2ndf3#f%2_003g6j$xwqvh9@f1b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', ]
+ALLOWED_HOSTS = ['127.0.0.1', 'http://127.0.0.1:8000/', ]
 
 # Application definition
 
@@ -135,6 +135,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = Path.joinpath(BASE_DIR, 'static')
+
 LOGIN_URL = 'login/'
 
 AUTHENTICATION_BACKENDS = [
@@ -166,4 +168,4 @@ ACCOUNT_USERNAME_REQUIRED = False
 
 #Directtory to store uploaded files on server
 MEDIA_URL = "/media/"
-MEDIA_ROOT = Path.joinpath(BASE_DIR, "media/")
+MEDIA_ROOT = Path.joinpath(BASE_DIR, "media")

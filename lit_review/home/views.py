@@ -62,4 +62,4 @@ def index(request):
 
 def handler404(request, *args, **argv):
 	context = {'args': args, 'argv': argv}
-	return render(request, 'home/handler404.html', context)
+	return render(request, 'home/404.html', context)

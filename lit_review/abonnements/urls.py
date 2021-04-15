@@ -5,7 +5,7 @@ from . import views
 app_name = 'abonnements'
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.Index.as_view(), name='index'),
     path('create/', views.create, name='create'),
-    path('delete/<int:followed_user_id>', views.delete, name='delete'),
+    path('delete/<int:pk>', views.UserFollowsDelete.as_view(), name='delete'),
 ]
