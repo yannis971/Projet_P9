@@ -1,54 +1,88 @@
-from itertools import chain
-from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy, reverse
+
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
-from django.views.generic.edit import CreateView
-from django.views.generic import DetailView
-from django.views.generic import ListView
-from django.db.models import CharField, Value
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
+from django.core.paginator import PageNotAnInteger
+from django.core.paginator import EmptyPage
+from django.db.models import CharField
+from django.db import IntegrityError
 from django.db.models import Q
-from django import forms
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from flux.models import Review, Ticket, UserFollows, IntegrityError
+from django.db.models import Value
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render
+from django.urls import reverse
+from django.views.generic.edit import CreateView
 
-#from flux.forms import ReviewForm, TicketForm
-from flux.forms import ReviewModelForm, TicketModelForm
+from itertools import chain
 
+from flux.forms import ReviewModelForm
+from flux.forms import TicketModelForm
+from flux.models import Review
+from flux.models import Ticket
+from flux.models import UserFollows
 
-def get_users_viewable(user):
-    users = User.objects.filter(id=user.id).values_list('id')
-    followed_users = UserFollows.objects.filter(user=user).values_list('followed_user_id')
+def get_users_viewable(logged_in_user):
+    """
+    Fonction qui renvoie la liste des identifiants des utilisateurs
+    dits "visibles" à savoir :
+    - l'utilisateur connecté lui même : "users"
+    - et les utilsateurs suivis par l'utilsateur connecté : "followed_users"
+    """
+    users = User.objects.filter(id=logged_in_user.id).values_list('id')
+    followed_users = UserFollows.objects.filter(user=logged_in_user).values_list('followed_user_id')
     users_viewable = chain(users, followed_users)
     return users_viewable
 
 
-def get_users_viewable_tickets(user):
-    return Ticket.objects.filter(user_id__in=get_users_viewable(user))
+def get_users_viewable_tickets(logged_in_user):
+    """
+    Fonction qui renvoie la liste (queryset) des tickets créés par les
+    utilisateurs dits "visibles" (voir la fonction get_users_viewable plus haut)
+    """
+    return Ticket.objects.filter(user_id__in=get_users_viewable(logged_in_user))
 
 
-def get_tickets_user(user):
-    return Ticket.objects.filter(user=user)
+def get_tickets_user(logged_in_user):
+    """
+    Fonction qui renvoie la liste (queryset) des tickets créés par
+    l'utilisateur connecté
+    """
+    return Ticket.objects.filter(user=logged_in_user)
 
-def get_users_viewable_reviews(user):
-    users_viewable_reviews = Review.objects.filter(user=user)
+
+def get_users_viewable_reviews(logged_in_user):
+    """
+    Fonction qui renvoie la liste des critiques :
+    - sur les tickets publiés par "logged_in_user" ou
+    - créés par "user" ou les utilisateurs auquels "logged_in_user" est abonné
+    """
     try:
-        users_viewable_reviews = Review.objects.filter(Q(
-            ticket__in=get_tickets_user(user)) | Q(user_id__in=get_users_viewable(user)))
+        users_viewable_reviews = Review.objects.filter(Q(ticket__in=get_tickets_user(logged_in_user)) | Q(user_id__in=get_users_viewable(logged_in_user)))
     except:
-        pass
+        users_viewable_reviews = Review.objects.filter(user=logged_in_user)
 
     return users_viewable_reviews
 
-def get_tickets_user_locked(user):
-    return Review.objects.filter(user=user).values('ticket_id')
 
-# Create your views here.
+def get_tickets_user_locked(logged_in_user):
+    """
+    Fonction qui renvoie la liste des tickets publiés par l'utilisateur connecté
+    afin de bloquer la création de critique par l'utilisateur sur ses propres
+    tickets
+    """
+    return Review.objects.filter(user=logged_in_user).values('ticket_id')
+
+
 @login_required
 def index(request):
+    """
+	Fonction appelée lorsque l'utilisateur est redirigé vers l'application flux
+	Le décorateur @login_required permet de restreindre l'accès à l'application
+	uniquement aux utilisateurs connectés
+    """
     reviews = get_users_viewable_reviews(request.user)
     # returns queryset of reviews
     reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
@@ -64,16 +98,19 @@ def index(request):
         reverse=True
     )
 
-    paginator = Paginator(object_list, 3)  # 3 posts in each page
+    # utilisation de la classe Paginator pour gérer la pagination
+    paginator = Paginator(object_list, 3)  # 3 posts par page
     page = request.GET.get('page')
 
     try:
         post_list = paginator.page(page)
     except PageNotAnInteger:
-            # If page is not an integer deliver the first page
+        # si l'argument page est non numérique on redirige vers la première
+        # page
         post_list = paginator.page(1)
     except EmptyPage:
-        # If page is out of range deliver last page of results
+        # on renvoie la dernière page si l'argument page est au delà du nombre
+        # de page maximal
         post_list = paginator.page(paginator.num_pages)
 
     locked_tickets = [item['ticket_id'] for item in list(get_tickets_user_locked(request.user))]
@@ -83,6 +120,11 @@ def index(request):
 
 
 class TicketCreate(LoginRequiredMixin, CreateView):
+    """
+    Classe héritant de LoginRequiredMixin et CreateView
+    Appelée en tant de que view afin de créer un ticket
+    LoginRequiredMixin permet d'autoriser l'accès qu'aux utilisateurs conneectés
+    """
     form_class = TicketModelForm
     template_name = 'flux/ticket_form.html'
 
@@ -98,34 +140,14 @@ class TicketCreate(LoginRequiredMixin, CreateView):
         messages.success(self.request, "Le ticket a été créé avec succes")
         return reverse("posts:index")
 
-class TicketDetail(LoginRequiredMixin, DetailView):
-    context_object_name = 'ticket_detail'
-    template_name = 'flux/ticket_detail.html'
-    queryset = Ticket.objects.all()
-
-
-class TicketList(LoginRequiredMixin, ListView):
-    context_object_name = 'ticket_list'
-    template_name = 'flux/ticket_list.html'
-
-    def get_queryset(self):
-        return Ticket.objects.filter(user=self.request.user).order_by('-time_created')
-
-"""
-class ReviewCreate(LoginRequiredMixin, CreateView):
-    form_class = ReviewModelForm
-    template_name = 'flux/review_form.html'
-    success_url = reverse_lazy('flux:review-list')
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-"""
-
 
 @login_required
 def createReview(request):
+    """
+	Fonction appelée afin de créer un ticket et la critique associée
+	Le décorateur @login_required permet de restreindre l'accès à l'application
+	uniquement aux utilisateurs connectés
+    """
     template_name = 'flux/review_form.html'
     if request.method =='POST':
         ticket_form = TicketModelForm(request.POST)
@@ -151,6 +173,11 @@ def createReview(request):
 
 @login_required
 def createReviewOnTicket(request, ticket_id):
+    """
+	Fonction appelée afin de créer une critique en réponse à un ticket existant
+	Le décorateur @login_required permet de restreindre l'accès à l'application
+	uniquement aux utilisateurs connectés
+    """
     review_form = ReviewModelForm()
     template_name = 'flux/review_on_ticket_form.html'
     id = 0
@@ -175,17 +202,3 @@ def createReviewOnTicket(request, ticket_id):
                 return HttpResponseRedirect(reverse('posts:index'))
     context = {'review_form': review_form, 'ticket_id': id}
     return render(request, template_name, context)
-
-
-class ReviewDetail(LoginRequiredMixin, DetailView):
-    context_object_name = 'review_detail'
-    template_name = 'flux/review_detail.html'
-    queryset = Review.objects.all()
-
-
-class ReviewList(LoginRequiredMixin, ListView):
-    context_object_name = 'review_list'
-    template_name = 'flux/review_list.html'
-
-    def get_queryset(self):
-        return Review.objects.filter(user=self.request.user).order_by('-time_created')

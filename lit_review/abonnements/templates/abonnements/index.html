@@ -25,10 +25,11 @@
     </div>
   </div>
 </form>
-  {% block scripts %}
-  <script>
-    const data = '{{ users_json }}'
-    const parsed_data = JSON.parse(data.replace(/&quot;/g,'"'))
+
+{% block scripts %}
+<script>
+  const data = '{{ users_json }}'
+  const parsed_data = JSON.parse(data.replace(/&quot;/g,'"'))
     const input = document.getElementById('search_user')
     const form = document.getElementById('user_follows')
     form.elements["followed_user_id"].value = ""
@@ -61,19 +62,18 @@
     });
 
     form.addEventListener("submit", function (event) {
-  // Chaque fois que l'utilisateur tente d'envoyer les données
-  // on vérifie que le champ followed_user_id est valide.
+    // Chaque fois que l'utilisateur tente d'envoyer les données
+    // on vérifie que le champ followed_user_id est valide.
     if (form.elements["followed_user_id"].value == "") {
 
       // S'il est invalide, on affiche un message d'erreur personnalisé
       let followed_user = parsed_data.filter(user => user['username'] == input.value)[0]
       form.elements["followed_user_id"].value = followed_user['id']
     }
-   }, false);
+    }, false);
 
-
-  </script>
-  {% endblock scripts %}
+</script>
+{% endblock scripts %}
 
 <form action="{% url 'abonnements:create' %}" method="post">
   {% csrf_token %}

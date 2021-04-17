@@ -1,55 +1,88 @@
-from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.db.models.functions import Lower
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from . import models as md
-from django.http import HttpResponse
-from django.contrib import messages
+
 import json
+
+from home.models import UserFollows
+
+
+def list_of_other_users(user):
+    return User.objects.filter(is_active=True,is_staff=False).exclude(username=user.username).order_by(Lower('username'))
+
+
+def list_of_other_users_values(user):
+    return list(User.objects.values('id', 'username').filter(is_active=True,is_staff=False).exclude(username=user.username).order_by(Lower('username')))
+
+
+def list_of_following(user):
+    return UserFollows.objects.filter(user=user).order_by(Lower('followed_user__username'))
+
+
+def list_of_followed_by(user):
+    return UserFollows.objects.filter(followed_user=user).order_by(Lower('user__username'))
 
 
 class Index(LoginRequiredMixin, TemplateView):
+    """
+    Classe héritant de LoginRequiredMixin et TemplateView
+    Appelée en tant de que view lorsque l'url passée dans la requete est
+    http://127.0.0.1:8000/abonnements/
+    LoginRequiredMixin permet d'autoriser l'accès qu'aux utilisateurs conneectés
+    """
     template_name = 'abonnements/index.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['list_of_other_users'] = md.list_of_other_users(self.request.user)
-        context['list_of_followed_by'] = md.list_of_followed_by(self.request.user)
-        context['list_of_following'] = md.list_of_following(self.request.user)
-        context['users_json'] = json.dumps(md.list_of_other_users_values(self.request.user))
+        context['list_of_other_users'] = list_of_other_users(self.request.user)
+        context['list_of_followed_by'] = list_of_followed_by(self.request.user)
+        context['list_of_following'] = list_of_following(self.request.user)
+        context['users_json'] = json.dumps(list_of_other_users_values(self.request.user))
         return context
 
 
 @login_required
-def create(request):
+def user_follows_create(request):
+    """
+    Fonction permetant de créer un abonnement
+    """
     if request.method == 'POST':
         user = request.user
         try:
             followed_user_id = int(request.POST.get('followed_user_id'))
-            followed_user = get_object_or_404(md.User, pk=followed_user_id)
-            query = md.UserFollows(user=user, followed_user=followed_user)
+            followed_user = get_object_or_404(User, pk=followed_user_id)
+            query = UserFollows(user=user, followed_user=followed_user)
             query.save()
         except ValueError:
             messages.info(request, "Identifiant utilisateur non numérique ! Impossible de créer un abonnement !")
         except md.IntegrityError:
             messages.info(request, f"L'abonnement au compte {followed_user.username} existe déjà ! Il est impossible de le créer !")
         else:
-            messages.success(request, f"Abonnement au compte {followed_user.username} créé avec succès !")
+            messages.success(request, f"L'abonnement au compte {followed_user.username} a été créé avec succès !")
     return HttpResponseRedirect(reverse('abonnements:index'))
 
 
 class UserFollowsDelete(LoginRequiredMixin, DeleteView):
+    """
+    Classe héritant de LoginRequiredMixin et DeleteView
+    Appelée en tant de que view afin de supprimer un abonnement
+    LoginRequiredMixin permet d'autoriser l'accès qu'aux utilisateurs conneectés
+    """
     template_name = 'abonnements/user_follows_delete_form.html'
 
     def get_object(self):
-        followed_user = get_object_or_404(md.User, pk=self.kwargs.get("pk"))
-        userFollows = get_object_or_404(md.UserFollows.objects.filter(user=self.request.user,followed_user=followed_user))
+        followed_user = get_object_or_404(User, pk=self.kwargs.get("pk"))
+        userFollows = get_object_or_404(UserFollows.objects.filter(user=self.request.user,followed_user=followed_user))
         return userFollows
 
     def get_success_url(self):
-        #followed_user = get_object_or_404(md.User, pk=self.kwargs.get("pk"))
         messages.success(self.request, f"L'abonnement au compte {self.object.followed_user.username} a été supprimé avec succès !")
         return reverse("abonnements:index")

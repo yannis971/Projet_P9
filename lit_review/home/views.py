@@ -1,16 +1,18 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect, HttpResponseNotFound
-from django.urls import reverse
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import CreateUserForm
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import reverse
 
-# Create your views here.
+from home.forms import CreateUserForm
 
-# return redirect fonctionne avec l'URL absolue
 
 def loginUser(request):
+	"""
+	Fonction permettant à un utilisateur de se connecter et de s'authentifier à
+	l'aide d'un identifiant et d'un mot de passe
+	"""
 	if request.user.is_authenticated:
 		return HttpResponseRedirect(reverse('home:index'))
 	else:
@@ -28,6 +30,11 @@ def loginUser(request):
 
 
 def registerUser(request):
+	"""
+	Fonction permettant à un utilisateur de s'inscrire à l'aide d'un formulaire
+	de création de compte héritant de la classe UserCreationForm du package
+	django.contrib.auth.forms
+	"""
 	if request.user.is_authenticated:
 		return HttpResponseRedirect(reverse('home:index'))
 	else:
@@ -50,6 +57,9 @@ def registerUser(request):
 
 
 def logoutUser(request):
+	"""
+	Fonction permettant de se déconnecter du site
+	"""
 	messages.success(request, "Vous êtes déconnecté")
 	logout(request)
 	return HttpResponseRedirect(reverse('home:login'))
@@ -57,9 +67,21 @@ def logoutUser(request):
 
 @login_required
 def index(request):
-    context = {'user':request.user}
-    return render(request, 'home/index.html', context)
+	"""
+	Fonction appelée lorsque l'utilisateur saisie l'URL d'accès au site :
+	http://127.0.0.1:8000/home
+	Le décorateur @login_required permet de restreindre l'accès au site
+	uniquement aux utilisateurs connectés
+	Une fois connecté, l'utilisateur est redirigée vers l'accueil de
+	l'application flux
+	"""
+	return HttpResponseRedirect(reverse('flux:index'))
+
 
 def handler404(request, *args, **argv):
+	"""
+	Gestionnaire d'erreur HTTP 404 redirigeant vers une page d'erreur 404
+	customisée
+	"""
 	context = {'args': args, 'argv': argv}
 	return render(request, 'home/404.html', context)

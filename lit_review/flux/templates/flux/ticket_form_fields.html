@@ -1,7 +1,7 @@
 <label for="title">Titre</label><br>
 <div class="form-group">
   <input type="text" class="form-control" name="title" id="title" required minlength="1" maxlength="128" size="128"
-    {% if ticket_form.title %}
+    {% if ticket_form.title.value %}
       value="{{ ticket_form.title.value }}"
     {% endif %}
   >
@@ -9,13 +9,13 @@
 <label for="description">Description</label><br>
 <div class="form-group">
   <textarea class="form-control" name="description" id="description" maxlength="2048" rows="8">
-    {% if ticket_form.description %}{{ ticket_form.description.value }}{% endif %}
+    {% if ticket_form.description.value %}{{ ticket_form.description.value }}{% endif %}
   </textarea>
 </div>
 <label for="image">Image</label><br>
 <div class="form-group">
   <input type="file" name="image" id="image" accept="image/png, image/jpeg"
-  {% if ticket_form.title %}
+   {% if ticket_form.image.value %}
       value="{{ ticket_form.image.value }}"
     {% endif %}
   >
