@@ -1,0 +1,55 @@
+{% extends 'home/base.html' %}
+
+{% block body %}
+
+{% include 'home/navbar.html' %}
+
+{% for message in messages %}
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+    <div class="alert alert-danger">{{message|escape}}</div>
+  {% endif %}
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+    <div class="alert alert-success">{{message|escape}}</div>
+  {% endif %}
+{% endfor %}
+
+<div class="container">
+  <div class="row">
+    <div class="col text-center align-self-center">
+      <h2>Créer un ticket</h2>
+      <br>
+    </div>
+    <div class="row">
+      <div class="col">
+        <form action="{% url 'flux:ticket-add' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% include 'flux/ticket_form_fields.html' %}
+          <div class="form-group text-right">
+            <a href="{% url 'flux:index' %}"><button type="button" class="btn btn-primary" formnovalidate>Abandonner</button></a>
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if ticket_form.errors %}
+    {% for error in ticket_form.errors %}
+    <p>{{ error }}</p>
+    {% endfor %}
+    {% for field in ticket_form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in ticket_form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

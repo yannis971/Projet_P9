@@ -1,0 +1,57 @@
+{% load static %}
+  <div class="row">
+    {% if post.user.id == user.id %}
+      <div class="col text-left">Vous avez publié une critique</div>
+    {% else %}
+      <div class="col text-left">{{ post.user.username }} a publié une critique</div>
+    {% endif %}
+    <div class="col text-right">
+      {{ post.time_created }}
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col text-left">{{ post.headline }} -
+      {% for i in ratings %}
+        {% if i != 0 %}
+          {% if i > post.rating %}
+            <i class="fa fa-star"></i>
+          {% else %}
+    		    <i class="fa fa-star gold"></i>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col text-left">{{ post.body }}</div>
+  </div>
+  <br>
+  <div class="ticket_snippet">
+    <div class="row">
+      <div class="col text-left"> Ticket - {{ post.ticket.user.username}}</div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col text-left"> {{ post.ticket.title }}</div>
+    </div>
+    <br>
+    <div class="row">
+      {% if post.ticket.image %}
+        <div class="col text-left"><a href="{{MEDIA_URL}}{{ post.ticket.image }}" ><img src="{{ post.ticket.image.url }}"/></a>
+        </div>
+      {% else %}
+        <div class="col text-left">Pas d'image</div>
+      {% endif %}
+    </div>
+    <br>
+    {% if post.ticket.id not in locked_tickets %}
+    <div class="row">
+      <div class="col text-right">
+        <a href="{% url 'flux:review-add-on-ticket' post.ticket.id %}"><button type="button" class="btn btn-primary">Créer une critique</button></a>
+      </div>
+    </div>
+    <br>
+    {% endif %}
+  </div>

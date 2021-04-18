@@ -3,7 +3,48 @@
 {% block body %}
 
 {% include 'home/navbar.html' %}
+<br><h3 class="text-center">Vos posts</h3><br>
 
-<h3> Bienvenue {{ user.username }} sur la page des posts</h3>
+{% for message in messages %}
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+    <div class="alert alert-danger">{{message|escape}}</div>
+  {% endif %}
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+    <div class="alert alert-success">{{message|escape}}</div>
+  {% endif %}
+{% endfor %}
+
+{% if post_list %}
+  {% for post in post_list %}
+    {% if post.content_type == 'TICKET' %}
+      <div class="ticket_snippet">{% include 'flux/ticket_snippet.html' %}
+        <br>
+        <div class="row">
+          <div class="col text-right">
+            <a href="{% url 'posts:ticket-update' post.id %}"><button type="button" class="btn btn-primary">Modifier</button></a>
+            <a href="{% url 'posts:ticket-delete' post.id %}"><button type="button" class="btn btn-primary">Supprimer</button></a>
+          </div>
+        </div>
+        <br>
+      </div>
+
+    {% elif post.content_type == 'REVIEW' %}
+      <div class="review_snippet">{% include 'flux/review_snippet.html' %}
+        <br>
+        <div class="row">
+          <div class="col text-right">
+            <a href="{% url 'posts:review-update' post.id %}"><button type="button" class="btn btn-primary">Modifier</button></a>
+            <a href="{% url 'posts:review-delete' post.id %}"><button type="button" class="btn btn-primary">Supprimer</button></a>
+          </div>
+        </div>
+        <br>
+      </div>
+    {% endif %}
+  {% endfor %}
+{% else %}
+  <div class="alert alert-info text-center">Vous n'avez pas encore publié de posts</div>
+{% endif %}
+
+{% include 'flux/pagination_posts_snippet.html' %}
 
 {% endblock %}

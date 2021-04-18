@@ -4,6 +4,114 @@
 
 {% include 'home/navbar.html' %}
 
-<h3> Bienvenue {{ user.username }} sur la page des abonnements</h3>
+<br><h3 class="text-center">Suivre d'autres utilisateurs</h3><br>
+
+<form id="user_follows" action="{% url 'abonnements:create' %}" method="post" novalidate>
+  {% csrf_token %}
+  <div class="form-group">
+    <div class="row">
+      <div class="col">
+        <input id="search_user" class="form-control" placeholder="Rechercher un utilisateur à suivre">
+        <div id="search_user_box" style="display:none;" class="hud">
+          {% for user in list_of_other_users %}
+            <b>{{ user.username}}</b> <br>
+          {% endfor %}
+        </div>
+        <input id="followed_user_id" name="followed_user_id" type="hidden" value=""><br>
+      </div>
+      <div class="col text-right">
+        <button type="submit" class="btn btn-primary">Envoyer</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% block scripts %}
+<script>
+  const data = '{{ users_json }}'
+  const parsed_data = JSON.parse(data.replace(/&quot;/g,'"'))
+    const input = document.getElementById('search_user')
+    const form = document.getElementById('user_follows')
+    form.elements["followed_user_id"].value = ""
+    let error = document.querySelector('.error')
+    let filteredArr = []
+    input.addEventListener('keyup', (event) => {
+      search_user_box.style.display = "block"
+      search_user_box.innerHTML = ""
+      filteredArr = parsed_data.filter(user => user['username'].startsWith(event.target.value))
+      if (filteredArr.length > 1) {
+        filteredArr.map(user => {
+            search_user_box.innerHTML += `<b>${user['username']}</b><br>`
+        })
+      } else if (filteredArr.length == 1) {
+          filteredArr.map(user => {
+            search_user_box.innerHTML += `<b>${user['username']}</b><br>`
+            input.value = user['username']
+            form.elements["followed_user_id"].value = user['id']
+          })
+      }
+      else {
+        search_user_box.innerHTML = 'Aucun utilisateur trouvé'
+      }
+    });
+    input.addEventListener('focus', (event) => {
+      search_user_box.style.display = "block"
+    });
+    input.addEventListener('blur', (event) => {
+      search_user_box.style.display = "none"
+    });
+
+    form.addEventListener("submit", function (event) {
+    // Chaque fois que l'utilisateur tente d'envoyer les données
+    // on vérifie que le champ followed_user_id est valide.
+    if (form.elements["followed_user_id"].value == "") {
+
+      // S'il est invalide, on affiche un message d'erreur personnalisé
+      let followed_user = parsed_data.filter(user => user['username'] == input.value)[0]
+      form.elements["followed_user_id"].value = followed_user['id']
+    }
+    }, false);
+
+</script>
+{% endblock scripts %}
+
+{% for message in messages %}
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+    <div class="alert alert-danger">{{message|escape}}</div>
+  {% endif %}
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+    <div class="alert alert-success">{{message|escape}}</div>
+  {% endif %}
+{% endfor %}
+
+<br><h3 class="text-center">Abonnements</h3><br>
+
+{% if list_of_following %}
+  <form>
+  {% for user_follow in list_of_following %}
+  <div class="form-group">
+    <div class="row">
+      <div class="col" >{{ user_follow.followed_user.username }}</div>
+      <div class="col text-right"><a href="{% url 'abonnements:delete' user_follow.followed_user.id  %}"><button type="button" class="btn-secondary" formnovalidate>Désabonner</button></a></div>
+    </div>
+  </div>
+  {% endfor %}
+  </form>
+{% else %}
+  <div class="alert alert-info text-center">Vous n'avez pas d'abonnements</div>
+{% endif %}
+
+<br><h3 class="text-center">Abonnés</h3><br>
+<div class="container">
+{% if list_of_followed_by %}
+  {% for user_follow in list_of_followed_by %}
+    <div class="row">
+      <div class="col-lg-12 mx-auto" style="border:1px solid black; margin-top:0;margin-bottom:0">{{ user_follow.user.username }}</div>
+    </div>
+  {% endfor %}
+{% else %}
+  <div class="alert alert-info text-center">Vous n'avez pas d'abonnés</div>
+{% endif %}
+</div>
 
 {% endblock %}

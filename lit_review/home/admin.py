@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from home.models import Review, Ticket, UserFollows
+
+admin.site.register(Review)
+admin.site.register(Ticket)
+admin.site.register(UserFollows)

@@ -1,0 +1,51 @@
+{% extends 'home/base.html' %}
+
+{% block body %}
+
+{% include 'home/navbar.html' %}
+
+
+<div class="container">
+  <div class="row">
+    <div class="col text-center align-self-center">
+      <h3>Supprimer votre ticket</h3>
+      <br>
+    </div>
+  </div>
+  <div class="ticket_snippet">
+    <div class="row">
+      <div class="col text-center"><h4>Livre/Article</h4></div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col">
+          <label>Titre</label><br>
+          <div class="form-group">{{ object.title }}</div>
+          <label>Description</label><br>
+          <div class="form-group">{{ object.description }}</div>
+          {% if object.image %}
+            <label>Image</label><br>
+            <div class="col text-left"><img src="{{ MEDIA_URL }}{{ object.image }}" /></div>
+          {% else %}
+            <label>Pas d'image</label><br>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col">
+      <form action="" method="post">
+        {% csrf_token %}
+        <p class="text-center"><b>Vous souhaitez supprimer ce ticket ?</b></p>
+        <div class="form-group text-right">
+          <a href="{% url 'posts:index' %}"><button type="button" class="btn btn-primary" formnovalidate>NON</button></a>
+          <button type="submit" class="btn btn-primary">OUI</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

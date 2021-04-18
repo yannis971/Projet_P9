@@ -22,7 +22,8 @@
 
   <!-- Custom styles for this template -->
   <link href="{% static 'home/css/clean-blog.min.css' %}" rel="stylesheet">
-
+  <link href="{% static 'home/css/social-login.css' %}" rel="stylesheet">
+  <link href="{% static 'home/css/custom.css' %}" rel="stylesheet">
 </head>
 
 <body>
@@ -42,46 +43,22 @@
   </header>
 
   <!-- Main Content -->
-  <div id="contenu_de_page" class="container">
+  <div id="fond_de_page">
+    <div id="bloc_de_page" class="container">
       {% block body %}
       {% endblock %}
+    </div>
   </div>
 
   <hr>
 
   <!-- Footer -->
-  <footer>
+  <footer style="background-image: url('/static/home/img/home-bg.jpg');">
     <div class="container">
       <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <ul class="list-inline text-center">
-            <li class="list-inline-item">
-              <a href="#">
-                <span class="fa-stack fa-lg">
-                  <i class="fas fa-circle fa-stack-2x"></i>
-                  <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
-                </span>
-              </a>
-            </li>
-            <li class="list-inline-item">
-              <a href="#">
-                <span class="fa-stack fa-lg">
-                  <i class="fas fa-circle fa-stack-2x"></i>
-                  <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
-                </span>
-              </a>
-            </li>
-            <li class="list-inline-item">
-              <a href="#">
-                <span class="fa-stack fa-lg">
-                  <i class="fas fa-circle fa-stack-2x"></i>
-                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
-                </span>
-              </a>
-            </li>
-          </ul>
-          <p class="copyright text-muted">Copyright &copy; LITReview 2021</p>
-        </div>
+          <div class="col-lg-8 col-md-10 mx-auto text-center">
+            <p class="copyright text-muted"><b>Designed by Yannis Saliniere. Copyright &copy; LITReview 2021</b></p>
+          </div>
       </div>
     </div>
   </footer>

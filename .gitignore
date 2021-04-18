@@ -1,3 +1,4 @@
 env/
 lit_review/*/__pycache__/
 lit_review/*/migrations/__pycache__/
+.idea/

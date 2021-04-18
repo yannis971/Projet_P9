@@ -2,27 +2,50 @@
 
 {% block body %}
 
-<section>
+<div class="row">
+  <div class="col text-center">
   <h2>Inscrivez-vous</h2>
-
+  <br>
   <form action="" method="post">
     {% csrf_token %}
     <div class="form-group">
-      <input type="text" class="form-control" name="username" placeholder="Nom d'utilisateur">
-    </div>    
-    <div class="form-group">
-      <input type="password" class="form-control" name="password1" placeholder="Mot de passe">
+      <input type="text" class="form-control text-center" name="username" placeholder="Nom d'utilisateur" required
+      {% if form.username.value %}
+        value="{{ form.username.value }}"
+      {% endif %}
+      >
     </div>
+    <br>
     <div class="form-group">
-      <input type="password" class="form-control" name="password2" placeholder="Confirmer votre mot de passe">
+      <input type="email" class="form-control text-center" name="email" placeholder="Email"
+      {% if form.email.value %}
+        value="{{ form.email.value }}"
+      {% endif %}
+      >
     </div>
+    <br>
+    <div class="form-group">
+      <input type="password" class="form-control text-center" name="password1" placeholder="Mot de passe" required
+      {% if form.password1.value %}
+        value="{{ form.password1.value }}"
+      {% endif %}
+      >
+    </div>
+    <br>
+    <div class="form-group">
+      <input type="password" class="form-control text-center" name="password2" placeholder="Confirmer votre mot de passe" required
+      {% if form.password2.value %}
+        value="{{ form.password2.value }}"
+      {% endif %}
+      >
+    </div>
+    <br>
     <a href="{% url 'home:index' %}"><button type="button" class="btn btn-primary" formnovalidate>Retourner</button></a>
     <button type="submit" class="btn btn-primary">S'inscrire</button>
   </form>
-  {% if form.errors %}
-    {% for error in form.errors %}
-    <p>{{ error }}</p>
-    {% endfor %}
+  <br>
+
+{% if form.errors %}
     {% for field in form %}
         {% for error in field.errors %}
             <div class="alert alert-danger">
@@ -36,9 +59,17 @@
         </div>
     {% endfor %}
 {% endif %}
-  {% for message in messages %}
-					<p>{{message}}</p>
-				{% endfor %}
-</section>
+<br>
+{% for message in messages %}
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+    <div class="alert alert-danger">{{message|escape}}</div>
+  {% endif %}
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+    <div class="alert alert-success">{{message|escape}}</div>
+  {% endif %}
+{% endfor %}
+  </div>
+  <br>
+</div>
 
 {% endblock %}

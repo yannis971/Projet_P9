@@ -1,33 +1,80 @@
 {% extends 'home/base.html' %}
 
+{% load socialaccount %}
+
 {% block body %}
 
 <section>
 <div class="container">
   <div class="row">
-    <div class="col align-self-center">
+    <div class="col text-center align-self-center">
       <h2>Inscrivez-vous maintenant</h2>
+      <br>
       <form action="{% url 'home:register' %}" method="get">
         {% csrf_token %}
         <button type="submit" class="btn btn-primary">S'inscrire</button>
       </form>
     </div>
-    <div class="col align-self-center">
+    <div class="col text-center align-self-center">
       <h2>Connectez-vous</h2>
-      {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+      <br>
       {% for message in messages %}
-      <p>{{message}}</p>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+          <div class="alert alert-danger">{{message|escape}}</div>
+        {% endif %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+          <div class="alert alert-success">{{message|escape}}</div>
+        {% endif %}
       {% endfor %}
       <form action="" method="post">
         {% csrf_token %}
         <div class="form-group">
-          <input type="text" class="form-control" name="username" placeholder="Nom d'utilisateur">
+          <input type="text" class="form-control text-center" name="username" placeholder="Nom d'utilisateur"
+          {% if username %}
+            value="{{ username }}"
+          {% endif %}
+          >
         </div>
+        <br>
         <div class="form-group">
-          <input type="password" class="form-control" name="password" placeholder="Mot de passe">
+          <input type="password" class="form-control text-center" name="password" placeholder="Mot de passe"
+          {% if password %}
+            value="{{ password }}"
+          {% endif %}
+          >
         </div>
+        <br>
         <button type="submit" class="btn btn-primary">Se connecter</button>
       </form>
+      <div class="or-container">
+        <div class="line-separator"></div>
+        <div class="or-label"><h2>OU<h2></div>
+        <div class="line-separator"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <a class="btn btn-lg btn-social btn-block text-uppercase btn-outline" href="{% provider_login_url 'twitter' %}">
+            <img src="https://img.icons8.com/color/24/000000/twitter"> Twitter
+          </a>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-12">
+          <a class="btn btn-lg btn-social btn-block text-uppercase btn-outline" href="{% provider_login_url 'google' %}">
+            <img src="https://img.icons8.com/color/24/000000/google-logo.png"> Google
+          </a>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-12">
+          <a class="btn btn-lg btn-social btn-block text-uppercase btn-outline" href="{% provider_login_url 'github' %}">
+            <img src="https://img.icons8.com/color/24/000000/github"> Github
+          </a>
+        </div>
+      </div>
+      <br>
     </div>
   </div>
 </div>

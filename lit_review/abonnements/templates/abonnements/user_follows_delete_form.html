@@ -1,0 +1,35 @@
+{% extends 'home/base.html' %}
+
+{% block body %}
+
+{% include 'home/navbar.html' %}
+
+
+<div class="container">
+  <div class="row">
+    <div class="col text-center align-self-center">
+      <h3>Supprimer votre abonnement</h3>
+      <br>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col"><p class="text-center">Vous êtes abonné au compte de <b>{{ object.followed_user.username }}</b></p></div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col">
+      <form action="" method="post">
+        {% csrf_token %}
+        <p class="text-center"><b>Vous souhaitez supprimer cet abonnement ?</b></p>
+        <div class="form-group text-right">
+          <a href="{% url 'abonnements:index' %}"><button type="button" class="btn btn-primary" formnovalidate>NON</button></a>
+          <button type="submit" class="btn btn-primary">OUI</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

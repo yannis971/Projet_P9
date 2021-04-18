@@ -1,0 +1,60 @@
+{% extends 'home/base.html' %}
+
+{% block body %}
+
+{% include 'home/navbar.html' %}
+<div class="container">
+  <div class="row">
+    <div class="col text-center align-self-center">
+      <h2>Créer une critique</h2>
+      <br>
+    </div>
+    <div class="row">
+      <div class="col align-self-left">
+        <form action="{% url 'flux:review-add-on-ticket' ticket_id %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <fieldset name="ticket">
+            <legend>Livre/Article</legend>
+            <div class="form-group">
+              {{ review_form.instance.ticket.title }}
+            </div>
+            <label for="description">Description</label><br>
+            <div class="form-group">
+              {{ review_form.instance.ticket.description }}
+            </div>
+            <label for="image">Image</label><br>
+            <div class="form-group">
+              <img src="{{ MEDIA_URL }}{{ review_form.instance.ticket.image }}" /><br>
+            </div>
+           </fieldset>
+           <fieldset name="review">
+             <legend>Critique</legend>
+             {% include 'flux/review_form_fields.html' %}
+            </fieldset>
+            <div class="form-group text-right">
+              <button type="submit" class="btn btn-primary">Envoyer</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% if review_form.errors %}
+    {% for error in review_form.errors %}
+    <p>{{ error }}</p>
+    {% endfor %}
+    {% for field in review_form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in review_form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}
