@@ -137,7 +137,6 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = Path.joinpath(BASE_DIR, 'static')
 
-LOGIN_URL = 'login/'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -146,10 +145,11 @@ AUTHENTICATION_BACKENDS = [
 
 SITE_ID = 2
 ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/'
-LOGOUT_REDIRECT_URL = 'http://127.0.0.1:8000/'
+ACCOUNT_USERNAME_REQUIRED = True
+
+LOGIN_URL = 'login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 #Directtory to store uploaded files on server
 MEDIA_URL = "/media/"
