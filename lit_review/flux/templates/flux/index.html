@@ -3,6 +3,15 @@
 {% block body %}
 
 {% include 'home/navbar.html' %}
+
+  {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+      <div class="alert alert-danger">{{message|escape}}</div>
+    {% endif %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+      <div class="alert alert-success">{{message|escape}}</div>
+    {% endif %}
+  {% endfor %}
   <div class="container">
     <div class="row">
       <div class="col text-center align-self-center">
@@ -14,21 +23,25 @@
     </div>
   </div>
   <br>
-  {% for post in post_list %}
-    {% if post.content_type == 'TICKET' %}
-      <div class="ticket_snippet">{% include 'flux/ticket_snippet.html' %}
-        {% if post.id not in locked_tickets %}
-          <div class="row">
-            <div class="col text-right">
-              <a href="{% url 'flux:review-add-on-ticket' post.id %}"><button type="button" class="btn btn-primary">Créer une critique</button></a>
+  {% if post_list %}
+    {% for post in post_list %}
+      {% if post.content_type == 'TICKET' %}
+        <div class="ticket_snippet">{% include 'flux/ticket_snippet.html' %}
+          {% if post.id not in locked_tickets %}
+            <div class="row">
+              <div class="col text-right">
+                <a href="{% url 'flux:review-add-on-ticket' post.id %}"><button type="button" class="btn btn-primary">Créer une critique</button></a>
+              </div>
             </div>
-          </div>
-          <br>
-        {% endif %}
-      </div>
-    {% elif post.content_type == 'REVIEW' %}
-      <div class="review_snippet">{% include 'flux/review_snippet.html' %}</div>
-    {% endif %}
-  {% endfor %}
+            <br>
+          {% endif %}
+        </div>
+      {% elif post.content_type == 'REVIEW' %}
+        <div class="review_snippet">{% include 'flux/review_snippet.html' %}</div>
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-info text-center">Vous n'avez pas de flux visibles</div>
+  {% endif %}
   {% include 'flux/pagination_posts_snippet.html' %}
 {% endblock %}

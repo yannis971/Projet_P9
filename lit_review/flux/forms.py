@@ -1,4 +1,3 @@
-from django.db import models
 from django.forms.models import ModelForm
 
 from home.models import Review, Ticket
@@ -10,6 +9,7 @@ class ReviewModelForm(ModelForm):
     critique (model Review)
     """
     ratings = [0, 1, 2, 3, 4, 5]
+
     class Meta:
         """
         classe permettant de définir le model et les champs qui seront gérés

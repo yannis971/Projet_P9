@@ -23,9 +23,11 @@
             <textarea class="form-control" name="description" id="description" maxlength="2048" rows="8">{{ form.description.value }}</textarea>
           </div>
           <label for="image">Image</label><br>
+          {% if form.image.value %}
           <div class="col text-left">
             <img src="{{ MEDIA_URL }}{{ form.image.value }}" />
           </div>
+          {% endif %}
           <div class="form-group">
             <input type="file" name="image" id="image" accept="image/png, image/jpeg" title="Modifier l'image">
           </div>

@@ -13,7 +13,7 @@ class Ticket(models.Model):
     description = models.CharField(max_length=2048, blank=True)
     user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    image = models.ImageField(null=True, blank=True,upload_to='images/')
+    image = models.ImageField(null=True, blank=True, upload_to='images/')
     time_created = models.DateTimeField(default=timezone.now)
 
     class Meta:
@@ -58,6 +58,7 @@ class UserFollows(models.Model):
     followed_user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
         related_name='followed_by')
+
     class Meta:
         """
         Contrainte d'unicité pour éviter des liens en doublons

@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.core.paginator import PageNotAnInteger
 from django.core.paginator import EmptyPage
@@ -18,8 +17,8 @@ from itertools import chain
 from flux.forms import ReviewModelForm
 from flux.forms import TicketModelForm
 
-from posts.models import Review
-from posts.models import Ticket
+from home.models import Review
+from home.models import Ticket
 
 
 def get_tickets_user_locked(logged_in_user):
@@ -58,9 +57,9 @@ def get_user_posts(logged_in_user):
 @login_required
 def index(request):
     """
-	Fonction appelée lorsque l'utilisateur est redirigé vers l'application posts
-	Le décorateur @login_required permet de restreindre l'accès à l'application
-	uniquement aux utilisateurs connectés
+    Fonction appelée lorsque l'utilisateur est redirigé vers l'application posts
+    Le décorateur @login_required permet de restreindre l'accès à l'application
+    uniquement aux utilisateurs connectés
     """
     object_list = get_user_posts(request.user)
     paginator = Paginator(object_list, 3)  # 3 posts in each page
@@ -77,10 +76,10 @@ def index(request):
         # de page maximal
         post_list = paginator.page(paginator.num_pages)
 
-    context = {'page': page, 'post_list': post_list,
-        'ratings' : ReviewModelForm.ratings,
-        'locked_tickets': get_tickets_user_locked(request.user)
-     }
+    context = dict()
+    context['post_list'] = post_list
+    context['ratings'] = ReviewModelForm.ratings
+    context['locked_tickets'] = get_tickets_user_locked(request.user)
 
     return render(request, 'posts/index.html', context)
 

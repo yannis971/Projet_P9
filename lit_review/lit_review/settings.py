@@ -25,7 +25,7 @@ SECRET_KEY = 'oqk0!!xu*+7a)63ma%j!wrr2ndf3#f%2_003g6j$xwqvh9@f1b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'http://127.0.0.1:8000/', ]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'http://127.0.0.1:8000/', ]
 
 # Application definition
 
@@ -44,9 +44,9 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.twitter',
-    'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.twitter',
 ]
 
 MIDDLEWARE = [
@@ -144,27 +144,12 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-#SITE_ID = 2
-LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/home/'
-LOGOUT_REDIRECT_URL = 'http://127.0.0.1:8000/home/'
-
-SITE_ID = 3
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
-    }
-}
-
 SITE_ID = 2
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/'
+LOGOUT_REDIRECT_URL = 'http://127.0.0.1:8000/'
 
 #Directtory to store uploaded files on server
 MEDIA_URL = "/media/"

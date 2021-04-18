@@ -20,9 +20,10 @@ from itertools import chain
 
 from flux.forms import ReviewModelForm
 from flux.forms import TicketModelForm
-from flux.models import Review
-from flux.models import Ticket
-from flux.models import UserFollows
+from home.models import Review
+from home.models import Ticket
+from home.models import UserFollows
+
 
 def get_users_viewable(logged_in_user):
     """
@@ -61,7 +62,7 @@ def get_users_viewable_reviews(logged_in_user):
     """
     try:
         users_viewable_reviews = Review.objects.filter(Q(ticket__in=get_tickets_user(logged_in_user)) | Q(user_id__in=get_users_viewable(logged_in_user)))
-    except:
+    except Review.DoesNotExist:
         users_viewable_reviews = Review.objects.filter(user=logged_in_user)
 
     return users_viewable_reviews
@@ -79,9 +80,9 @@ def get_tickets_user_locked(logged_in_user):
 @login_required
 def index(request):
     """
-	Fonction appelée lorsque l'utilisateur est redirigé vers l'application flux
-	Le décorateur @login_required permet de restreindre l'accès à l'application
-	uniquement aux utilisateurs connectés
+    Fonction appelée lorsque l'utilisateur est redirigé vers l'application flux
+    Le décorateur @login_required permet de restreindre l'accès à l'application
+    uniquement aux utilisateurs connectés
     """
     reviews = get_users_viewable_reviews(request.user)
     # returns queryset of reviews
@@ -115,7 +116,12 @@ def index(request):
 
     locked_tickets = [item['ticket_id'] for item in list(get_tickets_user_locked(request.user))]
 
-    context = {'user':request.user, 'post_list': post_list, 'ratings' : ReviewModelForm.ratings, 'locked_tickets': locked_tickets}
+    context = dict()
+    context['user'] = request.user
+    context['post_list'] = post_list
+    context['ratings'] = ReviewModelForm.ratings
+    context['locked_tickets'] = locked_tickets
+
     return render(request, 'flux/index.html', context)
 
 
@@ -144,12 +150,12 @@ class TicketCreate(LoginRequiredMixin, CreateView):
 @login_required
 def createReview(request):
     """
-	Fonction appelée afin de créer un ticket et la critique associée
-	Le décorateur @login_required permet de restreindre l'accès à l'application
-	uniquement aux utilisateurs connectés
+    Fonction appelée afin de créer un ticket et la critique associée
+    Le décorateur @login_required permet de restreindre l'accès à l'application
+    uniquement aux utilisateurs connectés
     """
     template_name = 'flux/review_form.html'
-    if request.method =='POST':
+    if request.method == 'POST':
         ticket_form = TicketModelForm(request.POST)
         review_form = ReviewModelForm(request.POST)
         if ticket_form.is_valid() and review_form.is_valid():
@@ -157,8 +163,8 @@ def createReview(request):
                 ticket_form.instance.user = request.user
                 review_form.instance.ticket = ticket_form.save()
             except IntegrityError:
-                messages.info(self.request, f"Vous avez déjà créé un ticket avec le même titre : {ticket_form.instance.title}")
-                return render(self.request, template_name, {'ticket_form': ticket_form, 'review_form': review_form})
+                messages.info(request, f"Vous avez déjà créé un ticket avec le même titre : {ticket_form.instance.title}")
+                return render(request, template_name, {'ticket_form': ticket_form, 'review_form': review_form})
             else:
                 review_form.instance.user = request.user
                 review_form.save()
@@ -167,38 +173,37 @@ def createReview(request):
     else:
         ticket_form = TicketModelForm()
         review_form = ReviewModelForm()
-    return render(request, template_name ,
-                  {'ticket_form': ticket_form, 'review_form': review_form})
+    return render(request, template_name, {'ticket_form': ticket_form, 'review_form': review_form})
 
 
 @login_required
 def createReviewOnTicket(request, ticket_id):
     """
-	Fonction appelée afin de créer une critique en réponse à un ticket existant
-	Le décorateur @login_required permet de restreindre l'accès à l'application
-	uniquement aux utilisateurs connectés
+    Fonction appelée afin de créer une critique en réponse à un ticket existant
+    Le décorateur @login_required permet de restreindre l'accès à l'application
+    uniquement aux utilisateurs connectés
     """
     review_form = ReviewModelForm()
     template_name = 'flux/review_on_ticket_form.html'
     id = 0
     try:
         id = int(ticket_id)
-        review_form.instance.ticket = get_object_or_404(Ticket,pk=id)
+        review_form.instance.ticket = get_object_or_404(Ticket, pk=id)
     except ValueError:
         messages.info(request, "Identifiant ticket non numérique")
-    if request.method =='POST':
+    if request.method == 'POST':
         review_form = ReviewModelForm(request.POST)
         if review_form.is_valid():
             id = int(ticket_id)
-            review_form.instance.ticket = get_object_or_404(Ticket,pk=id)
+            review_form.instance.ticket = get_object_or_404(Ticket, pk=id)
             review_form.instance.user = request.user
             try:
                 review_form.save()
             except IntegrityError:
-                messages.info(self.request, f"Vous avez déjà créé une critique sur le ticket N° : {review_form.instance.ticket.id}")
-                return render(self.request, template_name, {'ticket_form': ticket_form, 'review_form': review_form})
+                messages.info(request, f"Vous avez déjà créé une critique sur le ticket N° : {review_form.instance.ticket.id}")
+                return render(request, template_name, {'review_form': review_form})
             else:
-                messages.success(request, f"La critique a été créée avec succes")
+                messages.success(request, "La critique a été créée avec succes")
                 return HttpResponseRedirect(reverse('posts:index'))
     context = {'review_form': review_form, 'ticket_id': id}
     return render(request, template_name, context)

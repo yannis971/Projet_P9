@@ -29,11 +29,21 @@
       <form action="" method="post">
         {% csrf_token %}
         <div class="form-group">
-          <input type="text" class="form-control text-center" name="username" placeholder="Nom d'utilisateur">
+          <input type="text" class="form-control text-center" name="username" placeholder="Nom d'utilisateur"
+          {% if username %}
+            value="{{ username }}"
+          {% endif %}
+          >
         </div>
+        <br>
         <div class="form-group">
-          <input type="password" class="form-control text-center" name="password" placeholder="Mot de passe">
+          <input type="password" class="form-control text-center" name="password" placeholder="Mot de passe"
+          {% if password %}
+            value="{{ password }}"
+          {% endif %}
+          >
         </div>
+        <br>
         <button type="submit" class="btn btn-primary">Se connecter</button>
       </form>
       <div class="or-container">

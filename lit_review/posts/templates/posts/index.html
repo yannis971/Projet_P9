@@ -14,32 +14,36 @@
   {% endif %}
 {% endfor %}
 
-{% for post in post_list %}
-  {% if post.content_type == 'TICKET' %}
-    <div class="ticket_snippet">{% include 'flux/ticket_snippet.html' %}
-      <br>
-      <div class="row">
-        <div class="col text-right">
-          <a href="{% url 'posts:ticket-update' post.id %}"><button type="button" class="btn btn-primary">Modifier</button></a>
-          <a href="{% url 'posts:ticket-delete' post.id %}"><button type="button" class="btn btn-primary">Supprimer</button></a>
+{% if post_list %}
+  {% for post in post_list %}
+    {% if post.content_type == 'TICKET' %}
+      <div class="ticket_snippet">{% include 'flux/ticket_snippet.html' %}
+        <br>
+        <div class="row">
+          <div class="col text-right">
+            <a href="{% url 'posts:ticket-update' post.id %}"><button type="button" class="btn btn-primary">Modifier</button></a>
+            <a href="{% url 'posts:ticket-delete' post.id %}"><button type="button" class="btn btn-primary">Supprimer</button></a>
+          </div>
         </div>
+        <br>
       </div>
-      <br>
-    </div>
 
-  {% elif post.content_type == 'REVIEW' %}
-    <div class="review_snippet">{% include 'flux/review_snippet.html' %}
-      <br>
-      <div class="row">
-        <div class="col text-right">
-          <a href="{% url 'posts:review-update' post.id %}"><button type="button" class="btn btn-primary">Modifier</button></a>
-          <a href="{% url 'posts:review-delete' post.id %}"><button type="button" class="btn btn-primary">Supprimer</button></a>
+    {% elif post.content_type == 'REVIEW' %}
+      <div class="review_snippet">{% include 'flux/review_snippet.html' %}
+        <br>
+        <div class="row">
+          <div class="col text-right">
+            <a href="{% url 'posts:review-update' post.id %}"><button type="button" class="btn btn-primary">Modifier</button></a>
+            <a href="{% url 'posts:review-delete' post.id %}"><button type="button" class="btn btn-primary">Supprimer</button></a>
+          </div>
         </div>
+        <br>
       </div>
-      <br>
-    </div>
-  {% endif %}
-{% endfor %}
+    {% endif %}
+  {% endfor %}
+{% else %}
+  <div class="alert alert-info text-center">Vous n'avez pas encore publié de posts</div>
+{% endif %}
 
 {% include 'flux/pagination_posts_snippet.html' %}
 
