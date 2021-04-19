@@ -25,11 +25,14 @@
     </div>
     <br>
     <div class="form-group">
-      <input type="password" class="form-control text-center" name="password1" placeholder="Mot de passe" required
+      <input type="password" class="form-control text-center" name="password1" placeholder="Mot de passe" required aria-describedby="passwordHelpBlock"
       {% if form.password1.value %}
         value="{{ form.password1.value }}"
       {% endif %}
       >
+      <small id="passwordHelpBlock" class="form-text text-muted">
+        Votre mot de passe doit faire entre 8 et 20 caractères de longueur, contenir des lettres et des chiffres, mais pas d'espaces, de caractères spéciaux ou emoji.
+      </small>
     </div>
     <br>
     <div class="form-group">

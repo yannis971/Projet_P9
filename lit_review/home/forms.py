@@ -14,5 +14,5 @@ class CreateUserForm(UserCreationForm):
         Classe permettant de définir le model et les champs qui seront gérés
         dans le formulaire généré par la classe  CreateUserForm
         """
-    model = User
-    fields = ['username', 'email', 'password1', 'password2']
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
