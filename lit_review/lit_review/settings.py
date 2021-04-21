@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'oqk0!!xu*+7a)63ma%j!wrr2ndf3#f%2_003g6j$xwqvh9@f1b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'http://127.0.0.1:8000/', ]
 
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'flux.apps.FluxConfig',
     'posts.apps.PostsConfig',
+    'media',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -152,5 +153,6 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 #Directtory to store uploaded files on server
-MEDIA_URL = "/media/"
-MEDIA_ROOT = Path.joinpath(BASE_DIR, "media")
+#MEDIA_URL = "/media/"
+MEDIA_URL = "/static/media/"
+MEDIA_ROOT = Path.joinpath(BASE_DIR, "media/static/media")

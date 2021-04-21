@@ -46,7 +46,7 @@
       {% endif %}
     </div>
     <br>
-    {% if post.ticket.id not in locked_tickets %}
+    {% if post.ticket.id not in locked_tickets and post.ticket.user.id != user.id %}
     <div class="row">
       <div class="col text-right">
         <a href="{% url 'flux:review-add-on-ticket' post.ticket.id %}"><button type="button" class="btn btn-primary">Créer une critique</button></a>

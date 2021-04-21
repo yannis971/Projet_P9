@@ -2,20 +2,11 @@
 
 {% block body %}
 
-<h3> Oops ... Cette page n'existe pas ! </h3>
-
+<div class="text-center">
+<h3> Désolé ... Cette page n'existe pas ! </h3>
 <br>
 <a href="{% url 'home:index' %}"><button type="button" class="btn btn-primary">Retourner à la page d'accueil</button></a>
 <br>
-{% if request.GET %}
-  {{ request.GET }}
-{% else %}
-  {% if request.POST %}
-    {{ request.POST }}
-  {% else %}
-    {{ request }}
-  {% endif %}
-{% endif %}
-
+</div>
 
 {% endblock %}
