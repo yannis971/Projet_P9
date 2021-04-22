@@ -1,15 +1,15 @@
 <label for="headline">Titre</label><br>
 <div class="form-group">
   <input type="text" class="form-control" name="headline" id="headline" required minlength="1" maxlength="128" size="128"
-  {% if review_form.description.value %}
-    value="{{ review_form.description.value }}"
+  {% if review_form.headline.value %}
+    value="{{ review_form.headline.value }}"
   {% endif %}
   >
 </div>
 <p>Note</p>
 <div class="form-group">
    {% for i in review_form.ratings %}
-     {% if i == review.form.rating.value %}
+     {% if i == review_form.rating.value %}
        <input type="radio" name="rating" id="rating-{{ i }}" value="{{ i }}" checked>
      {% else %}
        <input type="radio" name="rating" id="rating-{{ i }}" value="{{ i }}">
@@ -21,7 +21,7 @@
 <div class="form-group">
   <textarea class="form-control" name="body" id="body" maxlength="8192" rows="8">
     {% if review_form.body.value %}
-      value="{{ review_form.body.value }}"
+      {{ review_form.body.value }}
     {% endif %}
   </textarea>
 </div>
