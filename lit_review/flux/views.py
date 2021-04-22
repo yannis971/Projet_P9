@@ -162,14 +162,13 @@ def createReview(request):
             try:
                 ticket_form.instance.user = request.user
                 review_form.instance.ticket = ticket_form.save()
-            except IntegrityError:
-                messages.info(request, f"Vous avez déjà créé un ticket avec le même titre : {ticket_form.instance.title}")
-                return render(request, template_name, {'ticket_form': ticket_form, 'review_form': review_form})
-            else:
                 review_form.instance.user = request.user
                 review_form.save()
                 messages.success(request, "La critique a été créée avec succes")
                 return HttpResponseRedirect(reverse('posts:index'))
+            except IntegrityError:
+                messages.info(request, f"Vous avez déjà créé un ticket avec le même titre : {ticket_form.instance.title}")
+                return render(request, template_name, {'ticket_form': ticket_form, 'review_form': review_form})
     else:
         ticket_form = TicketModelForm()
         review_form = ReviewModelForm()

@@ -39,3 +39,9 @@
   background-blend-mode: lighten;
 	z-index:2;
 }
+
+.custom-fieldset-container {
+	border: 2px solid #0085A1;
+	margin: 10px 0px 10px 0px;
+	padding: 10px;
+}
