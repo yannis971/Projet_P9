@@ -1,4 +1,4 @@
-{% extends 'home/base.html' %}
+{% extends 'abonnements/base.html' %}
 
 {% block body %}
 
@@ -11,10 +11,10 @@
   <div class="form-group form-group-lg">
     <div class="row">
       <div class="col-sm-10 align-self-center">
-        <input id="search_user" class="form-control" placeholder="Rechercher un utilisateur à suivre">
+        <input type="search" id="search_user" class="form-control" placeholder="Rechercher un utilisateur à suivre">
         <div id="search_user_box" style="display:none;">
           {% for user in list_of_other_users %}
-            <b>{{ user.username}}</b> <br>
+            <div id="{{ user.id }}" class="search_user_item">{{ user.username}}</div>
           {% endfor %}
         </div>
       </div>
@@ -25,55 +25,6 @@
   </div>
   <input id="followed_user_id" name="followed_user_id" type="hidden" value=""><br>
 </form>
-
-{% block scripts %}
-<script>
-  const data = '{{ users_json }}'
-  const parsed_data = JSON.parse(data.replace(/&quot;/g,'"'))
-    const input = document.getElementById('search_user')
-    const form = document.getElementById('user_follows')
-    form.elements["followed_user_id"].value = ""
-    let error = document.querySelector('.error')
-    let filteredArr = []
-    input.addEventListener('keyup', (event) => {
-      search_user_box.style.display = "block"
-      search_user_box.innerHTML = ""
-      filteredArr = parsed_data.filter(user => user['username'].startsWith(event.target.value))
-      if (filteredArr.length > 1) {
-        filteredArr.map(user => {
-            search_user_box.innerHTML += `<b>${user['username']}</b><br>`
-        })
-      } else if (filteredArr.length == 1) {
-          filteredArr.map(user => {
-            search_user_box.innerHTML += `<b>${user['username']}</b><br>`
-            input.value = user['username']
-            form.elements["followed_user_id"].value = user['id']
-          })
-      }
-      else {
-        search_user_box.innerHTML = 'Aucun utilisateur trouvé'
-      }
-    });
-    input.addEventListener('focus', (event) => {
-      search_user_box.style.display = "block"
-    });
-    input.addEventListener('blur', (event) => {
-      search_user_box.style.display = "none"
-    });
-
-    form.addEventListener("submit", function (event) {
-    // Chaque fois que l'utilisateur tente d'envoyer les données
-    // on vérifie que le champ followed_user_id est valide.
-    if (form.elements["followed_user_id"].value == "") {
-
-      // S'il est invalide, on affiche un message d'erreur personnalisé
-      let followed_user = parsed_data.filter(user => user['username'] == input.value)[0]
-      form.elements["followed_user_id"].value = followed_user['id']
-    }
-    }, false);
-
-</script>
-{% endblock scripts %}
 
 {% for message in messages %}
   {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}

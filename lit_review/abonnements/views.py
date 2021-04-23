@@ -12,6 +12,10 @@ from django.views.generic.edit import DeleteView
 
 import json
 
+from django.core import serializers
+from django.http import HttpResponse
+from django.http import JsonResponse
+
 from home.models import UserFollows
 
 
@@ -28,7 +32,7 @@ def list_of_other_users_values(logged_in_user):
     Fonction identique à list_of_other_users mais renvoie la liste des couples
     'id' et 'username'
     """
-    return list(User.objects.values('id', 'username').filter(is_active=True, is_staff=False).exclude(username=logged_in_user.username).order_by(Lower('username')))
+    return list(User.objects.values("id", "username").filter(is_active=True, is_staff=False).exclude(username=logged_in_user.username).order_by(Lower('username')))
 
 
 def list_of_following(logged_in_user):
@@ -104,3 +108,31 @@ class UserFollowsDelete(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         messages.success(self.request, f"L'abonnement au compte {self.object.followed_user.username} a été supprimé avec succès !")
         return reverse("abonnements:index")
+
+@login_required
+def fetchUsers(request):
+    """ Renvoie un array avec la liste des user.id et user.username triée sur user.username """
+    users_list = list_of_other_users_values(request.user)
+    return JsonResponse(users_list, safe=False)
+    """ Renvoie un array avec le model USer complet """
+    ##serialized_queryset = serializers.serialize('python', list_of_other_users(request.user))
+    ##return JsonResponse(serialized_queryset, safe=False)
+
+    """ Renvoie un truc immonde !!! """
+    #serialized_queryset = serializers.serialize('json', list_of_other_users(request.user))
+    #return JsonResponse(serialized_queryset, safe=False)
+    """ Renvoie du json mais avec des \ """
+    #print(list_of_other_users_values(request.user))
+    #data = {'data': json.dumps(list_of_other_users_values(request.user))}
+    #return JsonResponse(data, safe=False)
+    """ Renvoie un array """
+    #data = {"data": list_of_other_users_values(request.user)}
+    #return JsonResponse(data, safe=False)
+    """ Renvoie du json text avec le model complet """
+    #ajax_testvalue = serializers.serialize("json", User.objects.filter(is_active=True, is_staff=False).exclude(username=request.user.username).order_by(Lower('username')))
+    #return HttpResponse(ajax_testvalue)
+    """ Renvoie AttributeError """
+    # Exception Type: 	AttributeError
+    # Exception Value: 	'dict' object has no attribute '_meta'
+    #ajax_testvalue = serializers.serialize("json", User.objects.values("id", "username").filter(is_active=True, is_staff=False).exclude(username=request.user.username).order_by(Lower('username')))
+    #return HttpResponse(ajax_testvalue)
