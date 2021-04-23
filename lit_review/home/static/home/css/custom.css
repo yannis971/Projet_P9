@@ -45,3 +45,8 @@
 	margin: 10px 0px 10px 0px;
 	padding: 10px;
 }
+
+.search_user_item:hover {
+	background-color: #95999c;
+	color: white;
+}

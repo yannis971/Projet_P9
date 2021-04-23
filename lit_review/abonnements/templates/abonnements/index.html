@@ -11,10 +11,10 @@
   <div class="form-group form-group-lg">
     <div class="row">
       <div class="col-sm-10 align-self-center">
-        <input id="search_user" class="form-control" placeholder="Rechercher un utilisateur à suivre">
+        <input type="search" id="search_user" class="form-control" placeholder="Rechercher un utilisateur à suivre">
         <div id="search_user_box" style="display:none;">
           {% for user in list_of_other_users %}
-            <b>{{ user.username}}</b> <br>
+            <div id="{{ user.id }}" class="search_user_item">{{ user.username}}</div>
           {% endfor %}
         </div>
       </div>
@@ -30,38 +30,93 @@
 <script>
   const data = '{{ users_json }}'
   const parsed_data = JSON.parse(data.replace(/&quot;/g,'"'))
-    const input = document.getElementById('search_user')
-    const form = document.getElementById('user_follows')
-    form.elements["followed_user_id"].value = ""
-    let error = document.querySelector('.error')
-    let filteredArr = []
-    input.addEventListener('keyup', (event) => {
-      search_user_box.style.display = "block"
-      search_user_box.innerHTML = ""
-      filteredArr = parsed_data.filter(user => user['username'].startsWith(event.target.value))
-      if (filteredArr.length > 1) {
+  const input = document.getElementById('search_user')
+  const form = document.getElementById('user_follows')
+  form.elements["followed_user_id"].value = ""
+  let error = document.querySelector('.error')
+  let filteredArr = []
+
+  const feedInput = function (id, username) {
+      console.log("feedInput");
+      form.elements["followed_user_id"].value = id;
+      input.value = username;
+  }
+/*
+  document.querySelectorAll('.search_user_item').forEach(item => {
+    item.addEventListener('click', (event) => {
+      console.log(event.target);
+      console.log("click");
+    });
+    console.log(item);
+  });
+*/
+
+  input.addEventListener('keyup', (event) => {
+    search_user_box.style.display = "block"
+    search_user_box.innerHTML = ""
+    filteredArr = parsed_data.filter(user => user['username'].startsWith(event.target.value))
+    if (filteredArr.length > 1) {
+      filteredArr.map(user => {
+        search_user_box.innerHTML += `<div id="${user['id']}" class="search_user_item">${user['username']}</div>`
+      })
+    } else if (filteredArr.length == 1) {
         filteredArr.map(user => {
-            search_user_box.innerHTML += `<b>${user['username']}</b><br>`
+          search_user_box.innerHTML += `<div id="${user['id']}" class="search_user_item">${user['username']}</div>`
+          input.value = user['username']
+          form.elements["followed_user_id"].value = user['id']
         })
-      } else if (filteredArr.length == 1) {
-          filteredArr.map(user => {
-            search_user_box.innerHTML += `<b>${user['username']}</b><br>`
-            input.value = user['username']
-            form.elements["followed_user_id"].value = user['id']
-          })
-      }
-      else {
+    } else {
         search_user_box.innerHTML = 'Aucun utilisateur trouvé'
-      }
-    });
-    input.addEventListener('focus', (event) => {
-      search_user_box.style.display = "block"
-    });
-    input.addEventListener('blur', (event) => {
-      search_user_box.style.display = "none"
+    }
+    document.querySelectorAll('.search_user_item').forEach(item => {
+      item.addEventListener('over', (event) => {
+        //console.log(event.target)
+        //console.log("click")
+        //click_event.preventDefault()
+        let x = event.target
+        form.elements["followed_user_id"].value = x.id
+        input.value = x.username
+      });
+      //console.log(item)
     });
 
-    form.addEventListener("submit", function (event) {
+  });
+
+  input.addEventListener('focus', (event) => {
+    search_user_box.style.display = "block"
+    //document.querySelectorAll('.search_user_item').forEach(item => {
+     //  item.addEventListener('click', (click_event) => {
+    //    click_event.preventDefault()
+   //     let x = click_event.target
+    //   form.elements["followed_user_id"].value = x.id
+  //     input.value = x.username
+  //    });
+  //    });
+    //document.querySelectorAll('.search_user_item').forEach(item => {
+    //  item.addEventListener('click', event => {
+    //      console.log("click")
+    //  })
+    //  console.log(item)
+    //})
+    document.querySelectorAll('.search_user_item').forEach(a => {
+      a.addEventListener('over', feedInput(a.id, a.innerText))
+    });
+  });
+  input.addEventListener('blur', (event) => {
+    search_user_box.style.display = "none"
+    //document.querySelectorAll('.search_user_item').forEach(a => {
+    //  a.removeEventListener('click', feedInput("", ""));
+    //})
+
+  });
+
+  //document.querySelectorAll('.search_user_item').forEach(a => {
+  //  a.addEventListener('click', feedInput(a.id, a.innerText));
+ //});
+
+
+
+  form.addEventListener("submit", function (event) {
     // Chaque fois que l'utilisateur tente d'envoyer les données
     // on vérifie que le champ followed_user_id est valide.
     if (form.elements["followed_user_id"].value == "") {
@@ -70,7 +125,23 @@
       let followed_user = parsed_data.filter(user => user['username'] == input.value)[0]
       form.elements["followed_user_id"].value = followed_user['id']
     }
-    }, false);
+  }, false);
+
+
+  document.querySelectorAll('.search_user_item').forEach(item => {
+    item.addEventListener('over', (event) => {
+      //event.preventDefault()
+      console.log(event.target)
+      console.log("click")
+      let x = event.target
+      form.elements["followed_user_id"].value = x.id
+      input.value = x.username
+    });
+    console.log(item)
+  });
+
+
+
 
 </script>
 {% endblock scripts %}
