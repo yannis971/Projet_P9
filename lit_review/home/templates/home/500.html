@@ -1,0 +1,22 @@
+{% extends 'home/base.html' %}
+
+{% block body %}
+
+<div class="text-center">
+<h3> Désolé ... Une erreur interne s'est produite côté serveur !</h3>
+<br>
+<i class="bi bi-envelope"></i>
+<address>
+Vous pouvez contacter par mail l'administrateur du site en cliquant sur le lien ci-dessous :
+<br><a href="mailto:yannis.saliniere@gmail.com"><b>Yannis Saliniere</b></a><br>
+</address>
+<br>
+ou alors vous pouvez :
+<br>
+<br>
+<a href="{% url 'home:index' %}"><button type="button" class="btn btn-primary">retourner à la page d'accueil</button></a>
+<br>
+<br>
+</div>
+
+{% endblock %}
