@@ -153,6 +153,5 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 #Directtory to store uploaded files on server
-#MEDIA_URL = "/media/"
 MEDIA_URL = "/static/media/"
 MEDIA_ROOT = Path.joinpath(BASE_DIR, "media/static/media")
