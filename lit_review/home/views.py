@@ -1,7 +1,11 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate
+from django.contrib.auth import login
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
+from django.http import HttpResponseServerError
+from django.template import loader
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -87,3 +91,14 @@ def handler404(request, *args, **argv):
     """
     context = {'args': args, 'argv': argv}
     return render(request, 'home/404.html', context)
+
+
+def handler500(request):
+    """
+    Gestionnaire d'erreur HTTP 500 redirigeant vers une page d'erreur 500
+    customisée
+    """
+    template = loader.get_template('home/500.html')
+    response = HttpResponseServerError(template.render())
+    response.status_code = 500
+    return response
