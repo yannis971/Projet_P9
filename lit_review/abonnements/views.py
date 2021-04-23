@@ -111,28 +111,6 @@ class UserFollowsDelete(LoginRequiredMixin, DeleteView):
 
 @login_required
 def fetchUsers(request):
-    """ Renvoie un array avec la liste des user.id et user.username triée sur user.username """
+    """ Renvoie une liste des user.id et user.username triés sur user.username """
     users_list = list_of_other_users_values(request.user)
     return JsonResponse(users_list, safe=False)
-    """ Renvoie un array avec le model USer complet """
-    ##serialized_queryset = serializers.serialize('python', list_of_other_users(request.user))
-    ##return JsonResponse(serialized_queryset, safe=False)
-
-    """ Renvoie un truc immonde !!! """
-    #serialized_queryset = serializers.serialize('json', list_of_other_users(request.user))
-    #return JsonResponse(serialized_queryset, safe=False)
-    """ Renvoie du json mais avec des \ """
-    #print(list_of_other_users_values(request.user))
-    #data = {'data': json.dumps(list_of_other_users_values(request.user))}
-    #return JsonResponse(data, safe=False)
-    """ Renvoie un array """
-    #data = {"data": list_of_other_users_values(request.user)}
-    #return JsonResponse(data, safe=False)
-    """ Renvoie du json text avec le model complet """
-    #ajax_testvalue = serializers.serialize("json", User.objects.filter(is_active=True, is_staff=False).exclude(username=request.user.username).order_by(Lower('username')))
-    #return HttpResponse(ajax_testvalue)
-    """ Renvoie AttributeError """
-    # Exception Type: 	AttributeError
-    # Exception Value: 	'dict' object has no attribute '_meta'
-    #ajax_testvalue = serializers.serialize("json", User.objects.values("id", "username").filter(is_active=True, is_staff=False).exclude(username=request.user.username).order_by(Lower('username')))
-    #return HttpResponse(ajax_testvalue)
