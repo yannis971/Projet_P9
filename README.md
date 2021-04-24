@@ -7,7 +7,7 @@ Ce projet consiste à développer un site web pour le compte de la start-up LITR
 #### 1.1) Les cas d'utilisation de l'application
 L'utilisateur du site LITReview doit pouvoir :
 - se connecter et s’inscrire – le site ne doit pas être accessible à un utilisateur non connecté ;
-  - pour cette fonctionnalité, j'ai ajouté l'autentification via 3 médias sociaux (Twiter, Google et Github)
+  - pour cette fonctionnalité, j'ai ajouté l'authentification via 3 médias sociaux (Twiter, Google et Github)
 - consulter un flux contenant les derniers tickets et les commentaires des utilisateurs qu'il suit, classés par ordre chronologique, les plus récents en premier ;
   - pour cette fonctionnalité, j'ai mis en place un système de pagination (N posts par page avec la valeur N paramétrable)
 - créer de nouveaux tickets pour demander une critique sur un livre/article ;
@@ -35,7 +35,7 @@ L'utilisateur du site LITReview doit pouvoir :
 
 #### 1.4) Packages supplémentaires
 
-* **django-allauth** : package Django réutilisable qui permet à la fois l'autentification en "local" (via l'application web développée) et via les médias sociaux  
+* **django-allauth** : package Django réutilisable qui permet à la fois l'authentification en "local" (via l'application web développée) et via les médias sociaux  
 * **Pillow** : package permettant la gestion des images en Python
 
 ### 2) Architecture du projet
