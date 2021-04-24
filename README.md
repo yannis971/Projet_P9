@@ -42,7 +42,7 @@ L'utilisateur du site LITReview doit pouvoir :
 
 ![](images_for_readme/projet_lit_review.png)
 
-#### 2.1) Le projet `lit_rewiew`
+#### 2.1) Le projet `lit_review`
 
 C'est le projet au sens "Django" obtenu via la commande :
 
@@ -91,7 +91,7 @@ Cette application gère les actions de l'utilisateur dans la page flux :
 - créer des critiques en réponse à des tickets ;
 - créer des commentaires qui ne sont pas en réponse à un ticket.
 
-Le nombre de posts affichés par page de l'application `flux` est défini dans le fichier `lit_rewiew/settings.py` dans le paramètre `FLUX_NB_POSTS_BY_PAGE`.
+Le nombre de posts affichés par page de l'application `flux` est défini dans le fichier `lit_review/settings.py` dans le paramètre `FLUX_NB_POSTS_BY_PAGE`.
 Vous pouvez modifier ce paramètre à votre guise en veillant à mettre en entier > 0 :
 
 `FLUX_NB_POSTS_BY_PAGE = 3`
@@ -104,7 +104,7 @@ Une fois un ticket ou une critique créé, l'utilisateur est redirigé vers l'ap
 
 Cette application permet à l'utilisateur de voir, modifier et supprimer ses propres tickets et commentaires
 
-Le nombre de posts affichés par page de l'application `posts`est défini dans le fichier `lit_rewiew/settings.py` dans le paramètre `POSTS_NB_POSTS_BY_PAGE`.
+Le nombre de posts affichés par page de l'application `posts`est défini dans le fichier `lit_review/settings.py` dans le paramètre `POSTS_NB_POSTS_BY_PAGE`.
 
 Vous pouvez le modifier en veillant à mettre en entier > 0 :
 
