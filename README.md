@@ -67,7 +67,7 @@ Elle contient notamment les 2 fichiers :
 - `settings.py` : dans lequel se trouve l'ensemble de la configuration du projet
 - `urls.py` : dans lequel on définit l'ensemble des urls autorisées avec leur redirection dans les fichiers urls des applications concernées
 
-#### 2.2) L'application `home`
+#### 2.3) L'application `home`
 
 ![](images_for_readme/application_home.png)
 
@@ -81,7 +81,7 @@ Si l'utilisateur n'est pas authentifié et qu'il tente d'accéder à l'une des p
 
 A l'exception des images uploadées qui sont stockées dans le dossier `media` (voir plus bas), toutes les ressources statiques (css, javascript, icones, source Bootstrap) sont stockées dans le dossier `home/static/home`.
 
-#### 2.3) L'application `flux`
+#### 2.4) L'application `flux`
 
 ![](images_for_readme/application_flux.png)
 
@@ -101,7 +101,7 @@ Vous pouvez modifier ce paramètre à votre guise en veillant à mettre un entie
 
 Une fois un ticket ou une critique créé, l'utilisateur est redirigé vers l'application `posts`.
 
-#### 2.4) L'application `posts`
+#### 2.5) L'application `posts`
 
 ![](images_for_readme/application_posts.png)
 
@@ -113,7 +113,7 @@ Vous pouvez le modifier en veillant à mettre un entier > 0 :
 
 `POSTS_NB_POSTS_BY_PAGE = 3`
 
-#### 2.5) L'application `abonnements`
+#### 2.6) L'application `abonnements`
 
 ![](images_for_readme/application_abonnements.png)
 
@@ -133,7 +133,7 @@ Cette url "pointe" vers la fonction `fetchUsers` dans `abonnements.views` et ren
 
 Cette fonction `fetchUsers` n'est accessible que si l'utilisateur est authentifié.
 
-#### 2.6) Le dossier `media`
+#### 2.7) Le dossier `media`
 
 ![](images_for_readme/dossier_media.png)
 
@@ -147,7 +147,7 @@ Toutefois, au niveau du `fichier settings.py`, comme on est déployé en mode pr
 
 En effet, ce paramétrage permet le stockage et la restitution dans les pages HTML des images uploadées dans `media/static/media/images`.
 
-#### 2.7) Organisation du code du projet
+#### 2.8) Organisation du code du projet
 
 Le modèle de données est commun à toutes les applications il est donc dans l'application home.
 
@@ -163,8 +163,7 @@ Chaque application a son propre répertoire `templates` avec la possibilité de 
 
 Les images uploadées sont stockés dans le dossier `media/static/media/images`.
 
-
-#### 2.8) Configuration du projet livré dans le repository Github
+#### 2.9) Configuration du projet livré dans le repository Github
 
 Le projet publié dans Github est configuré en **mode production afin de permettre l'affichage de pages d'erreur 404 et 500 customisées**.
 
@@ -268,6 +267,8 @@ Toujours à la racine du projet, lancer l'une des 2 commandes suivantes :
 
 ### 5) Exécution
 
+#### 5.1) Lancer le serveur
+
 Une fois l'environnement virtuel activé et les dépendances du projet Projet_P9 installées, en étant positionné dans le dossier `projects/Projet_P9`, se déplacer dans le répertoire du projet Django `lit_review` en tapant la commande :
 
 `cd lit_review`
@@ -280,23 +281,19 @@ Lancer le serveur Django en tapant la commande :
 
 Avec le paramètre `--insecure`, on permet au serveur de charger les fichiers statiques (CSS, Javscript, images) dans les pages HTML renvoyées au client tout en ayant le paramètre `DEBUG` égal à `False`.
 
-Pour passer en mode développement, voir les instructions au paragraghe 2.8
+Pour passer en mode développement, voir les instructions au paragraghe 2.9
 
 ![](images_for_readme/runserver.png)
+
+#### 5.1) Se connecter
 
 Une fois le serveur démarré, ouvrir un navigateur et taper l'url : http://127.0.0.1:8000/
 
 La page de connexion au site web LITReview s'affiche alors dans votre navigateur.
 
-En étant sur la page de connexion, si vous n'avez pas de compte pour vous connecter, cliquer sur le bouton **S'INSCRIRE**.
+Se connecter avec un nom d'utilisateur et un mot de passe.
 
-Sur le formulaire d'inscription, renseigner un nom d'utilisateur et un  mot de passe (le champ e-mail est facultatif sauf si vous souhaitez utiliser par la suite la connexion via les médias sociaux).
-
-Confirmer le mot de passe puis cliquer sur le bouton S'INSCRIRE.
-
-Votre compte utilisateur sera créé et vous serez redirigé vers la page d'accueil du site.
-
-**Ci-après quelques captures d'écran de la page de login et du process d'incription.**
+**Ci-après quelques captures d'écran de la page de login.**
 
 Les autres pages sont à découvrir en lançant le serveur et en vous connectant au site !
 
@@ -312,7 +309,15 @@ Les autres pages sont à découvrir en lançant le serveur et en vous connectant
 
 ![](images_for_readme/desktop_02.png)
 
-**Process d'inscription, de navigation et de déconnexion**
+#### 5.2) S'inscrire et naviguer sur le site
+
+En étant sur la page de connexion, si vous n'avez pas de compte pour vous connecter, cliquer sur le bouton **S'INSCRIRE**.
+
+Sur le formulaire d'inscription, renseigner un nom d'utilisateur et un  mot de passe (le champ e-mail est facultatif sauf si vous souhaitez utiliser par la suite la connexion via les médias sociaux).
+
+Confirmer le mot de passe puis cliquer sur le bouton S'INSCRIRE.
+
+Votre compte utilisateur sera créé et vous serez redirigé vers la page d'accueil du site.
 
 **L'utilisateur renseigne puis valide le formulaire d'inscription**
 
