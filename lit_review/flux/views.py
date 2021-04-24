@@ -1,4 +1,5 @@
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -100,7 +101,7 @@ def index(request):
     )
 
     # utilisation de la classe Paginator pour gérer la pagination
-    paginator = Paginator(object_list, 3)  # 3 posts par page
+    paginator = Paginator(object_list, settings.FLUX_NB_POSTS_BY_PAGE)  # 3 posts par page
     page = request.GET.get('page')
 
     try:
