@@ -155,3 +155,6 @@ LOGOUT_REDIRECT_URL = '/'
 #Directtory to store uploaded files on server
 MEDIA_URL = "/static/media/"
 MEDIA_ROOT = Path.joinpath(BASE_DIR, "media/static/media")
+
+FLUX_NB_POSTS_BY_PAGE = 3
+POSTS_NB_POSTS_BY_PAGE = 3

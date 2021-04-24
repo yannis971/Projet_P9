@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -62,7 +63,7 @@ def index(request):
     uniquement aux utilisateurs connectés
     """
     object_list = get_user_posts(request.user)
-    paginator = Paginator(object_list, 3)  # 3 posts in each page
+    paginator = Paginator(object_list, settings.POSTS_NB_POSTS_BY_PAGE)
     page = request.GET.get('page')
 
     try:
