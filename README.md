@@ -9,12 +9,12 @@ L'utilisateur du site LITReview doit pouvoir :
 - se connecter et s’inscrire – le site ne doit pas être accessible à un utilisateur non connecté ;
   - pour cette fonctionnalité, j'ai ajouté l'autentification via 3 médias sociaux (Twiter, Google et Github)
 - consulter un flux contenant les derniers tickets et les commentaires des utilisateurs qu'il suit, classés par ordre chronologique, les plus récents en premier ;
-  - pour cette fonctionnalité, j'ai mis en place un système de pagination (N posts par page paramétrable)
+  - pour cette fonctionnalité, j'ai mis en place un système de pagination (N posts par page avec la valeur N paramétrable)
 - créer de nouveaux tickets pour demander une critique sur un livre/article ;
 - créer des critiques en réponse à des tickets ;
 - créer des commentaires qui ne sont pas en réponse à un ticket. Dans le cadre d'un processus en une étape, l'utilisateur crée un ticket puis un commentaire en réponse à son propre ticket ;
 - voir, modifier et supprimer ses propres tickets et commentaires ;
-  - pour cette fonctionnalité, j'ai également mis en place un système de pagination (N posts par page paramétrable)
+  - pour cette fonctionnalité, j'ai également ajouté un système de pagination (N posts par page avec la valeur N paramétrable)
 - suivre les autres utilisateurs en entrant leur nom d'utilisateur ;
   - pour cette fonctionnalité, j'ai créé une barre de recherche avec un script permettant de "dynamiser" la recherche
 - voir qui il suit et suivre qui il veut ;
@@ -22,20 +22,20 @@ L'utilisateur du site LITReview doit pouvoir :
 
 #### Frameworks utilisés
 
-* **Django** : pour le développement de sitse web en Python
-* **Bootstrap** : pour désigner des sites web responsive avec des thèmes intégrés
+* **Django** : pour le développement de sites web en Python
+* **Bootstrap** : pour concevoir des sites web "responsive" avec des thèmes intégrés
 
 #### Langages utilisés
 
-* **Python** : le langage de programmation interprété, multi-paradigmes et multiplateformes (classé N° 3 à l'index TIOBE en avril 2021)
-* **HTML** : pour structurer les pages du sites
+* **Python** : le langage de programmation interprété, multi-paradigmes et multiplateformes (classé N° 3 à l'index TIOBE en avril 2021), pour impléter la logique de l'application
+* **HTML** : pour structurer les pages du site
 * **CSS** : pour la mise en forme des pages HTML
-* **Javascript + API Fetch (AjAX)** : pour dynamiser le rendu HTML et raffraichir les données affichées en interrogeant le serveur
+* **Javascript + API Fetch (AJAX)** : pour dynamiser le rendu HTML et raffraichir les données affichées côté client en interrogeant le serveur
 * **Jinja** : langage de "templating" pour Python (pour faire simple c'est du Python dans des pages HTML)
 
 #### Packages supplémentaires
 
-* **django-allauth** : application Django réutilisable qui permet à la fois l'autentification en "local" (via l'application web développée) et via les médias sociaux  
+* **django-allauth** : package Django réutilisable qui permet à la fois l'autentification en "local" (via l'application web développée) et via les médias sociaux  
 * **Pillow** : package permettant la gestion des images en Python
 
 ### 2) Architecture du projet
@@ -73,40 +73,43 @@ Elle contient notamment les 2 fichiers :
 
 C'est l'application qui gère la partie inscription, connexion et authentification d'un utilisateur.
 
-Une fois authentifié, l'utilisateur est redirigé vers l'application flux (page d'accueil du site).
+Une fois authentifié, l'utilisateur est redirigé vers l'application `flux` (page d'accueil du site).
 
-Si l'utilisateur n'est pas authentifié et qu'il tente d'accéder à une page du site, il est alors redirigé vers l'application home afin de se connecter ou s'inscrire.
+Si l'utilisateur n'est pas authentifié et qu'il tente d'accéder à l'une des pages du site, il est alors redirigé vers l'application home afin de se connecter ou de s'inscrire.
 
 #### Remarque
 
-A l'exception des images uploadées qui sont stockées dans le dossier `media` (voir plus bas), toutes les ressources statiques (css, javascript, icones, source Bootstrap) sont stockées dans le dossier `home/static/home`
+A l'exception des images uploadées qui sont stockées dans le dossier `media` (voir plus bas), toutes les ressources statiques (css, javascript, icones, source Bootstrap) sont stockées dans le dossier `home/static/home`.
 
 #### 2.3) L'application `flux`
 
 ![](images_for_readme/application_flux.png)
 
-Cette application gère les actions de l'utilisateur dans la page flux :
-- consulter un flux contenant les derniers tickets et les commentaires des utilisateurs qu'il suit, classés par ordre chronologique, les plus récents en premier ;
+C'est l'application correspondant à la page d'accueil de l'utilisateur connecté au site LITReview.
+
+Elle gère les actions de l'utilisateur en relation avec ses flux, c'est à dire :
+- consulter un flux contenant les derniers tickets et les commentaires des utilisateurs qu'il suit, classés par ordre chronologique, les plus récents en premier;
 - créer de nouveaux tickets pour demander une critique sur un livre/article ;
 - créer des critiques en réponse à des tickets ;
 - créer des commentaires qui ne sont pas en réponse à un ticket.
 
-Le nombre de posts affichés par page de l'application `flux` est défini dans le fichier `lit_review/settings.py` dans le paramètre `FLUX_NB_POSTS_BY_PAGE`.
-Vous pouvez modifier ce paramètre à votre guise en veillant à mettre en entier > 0 :
+Le nombre de posts affichés par page de l'application `flux` est défini dans le fichier `lit_review/settings.py` via le paramètre `FLUX_NB_POSTS_BY_PAGE`.
+
+Vous pouvez modifier ce paramètre à votre guise en veillant à mettre un entier > 0 :
 
 `FLUX_NB_POSTS_BY_PAGE = 3`
 
-Une fois un ticket ou une critique créé, l'utilisateur est redirigé vers l'application posts
+Une fois un ticket ou une critique créé, l'utilisateur est redirigé vers l'application `posts`.
 
 #### 2.4) L'application `posts`
 
 ![](images_for_readme/application_posts.png)
 
-Cette application permet à l'utilisateur de voir, modifier et supprimer ses propres tickets et commentaires
+Cette application permet à l'utilisateur connecté au site LITReview de voir, modifier et supprimer ses propres tickets et commentaires.
 
 Le nombre de posts affichés par page de l'application `posts`est défini dans le fichier `lit_review/settings.py` dans le paramètre `POSTS_NB_POSTS_BY_PAGE`.
 
-Vous pouvez le modifier en veillant à mettre en entier > 0 :
+Vous pouvez le modifier en veillant à mettre un entier > 0 :
 
 `POSTS_NB_POSTS_BY_PAGE = 3`
 
@@ -114,8 +117,9 @@ Vous pouvez le modifier en veillant à mettre en entier > 0 :
 
 ![](images_for_readme/application_abonnements.png)
 
-Cette application permet de :
+Cette application est accessible via le lien ABONNEMENTS de la barre de navigation du site.
 
+Elle permet à un utilisateur connecté au site LITReview d'effectuer les actions suivantes :
 - suivre les autres utilisateurs en entrant leur nom d'utilisateur ;
   - pour cette fonctionnalité, j'ai créé une barre de recherche avec un script permettant de "dynamiser" la recherche
 - voir qui il suit et suivre qui il veut ;
@@ -125,7 +129,7 @@ Le script de gestion de la barre de recherche se nomme `search_users.js` et se t
 
 Ce script fait appel aux données coté serveur via l'API Fetch en appelant l'url "http://127.0.0.1:8000/abonnements/fetch/users/"
 
-Cette url "pointe" vers la fonction `fetchUsers` dans `abonnements.views` et renvoie un `JsonResponse` avec la liste des id et username des utilisateurs inscrits sur le site.
+Cette url "pointe" vers la fonction `fetchUsers` dans `abonnements.views` et renvoie un objet `JsonResponse` avec la liste des id et username des utilisateurs inscrits sur le site.
 
 Cette fonction `fetchUsers` n'est accessible que si l'utilisateur est authentifié.
 
@@ -139,9 +143,11 @@ Ce dossier a été créé manuellement et non pas via la commande :
 
 `./manage.py startapp media`
 
-Toutefois, au niveau du `fichier settings.py`, comme on est déployé en mode production (`DEBUG=False`), il convient de déclarer ce dossier `media`dans la liste des applications installées `INSTALLED_APPS` afin de permettre le stockage et la restitution dans les pages HTML des images uploadées dans `media/static/media/images`
+Toutefois, au niveau du `fichier settings.py`, comme on est déployé en mode production (`DEBUG=False`), il convient de déclarer ce dossier `media` dans la liste des applications installées `INSTALLED_APPS`.
 
-#### Organisation du code du projet
+En effet, ce paramétrage permet le stockage et la restitution dans les pages HTML des images uploadées dans `media/static/media/images`.
+
+#### 2.7) Organisation du code du projet
 
 Le modèle de données est commun à toutes les applications il est donc dans l'application home.
 
@@ -149,32 +155,36 @@ Les fichiers python non utilisés dans une application (tests.py ou models.py) o
 
 Les fichiers statiques (CSS, Javascript, Boostrap) se trouvent dans `home/static/home`.
 
-Chaque application a son propre répertoire `templates` avec possibilité
-exemple :
-l'application posts'
-la barre de navigation navbar.html se trouve uniquement dans home uniquement
+Chaque application a son propre répertoire `templates` avec la possibilité de réutiliser un template d'une autre application. Ci-après quelques exemples illustrant cette factorisation de code :
+- la page index.html l'application `posts` réutilise des "snippets" html de l'application `flux` :
+  - `ticket_snippet.html` : bout de code HTML pour l'affichage d'un ticket (demande de critique)
+  - `review_snippet.html`: bout de code HTML pour l'affichage d'une critique
+- la barre de navigation `navbar.html` se trouve uniquement dans les templates de l'application `home` : elle est importée dans le corps de page `{% block body %}` des autres applications
 
-Les images updloadées sont stockés dans media/static/media/images
-Les données à restituer sont hébergées sur le serveur OCMovies-API.
-Pour les récupérer, l'application utilise l'API Fetch en langage Javascript asynchrone.
+Les images uploadées sont stockés dans le dossier `media/static/media/images`.
 
 
-#### Configuration du projet
+#### 2.8) Configuration du projet livré dans le repository Github
 
-Le projet est configuré en **mode production afin de permettre l'affichage de pages d'erreur 404 et 500 customisées**.
+Le projet publié dans Github est configuré en **mode production afin de permettre l'affichage de pages d'erreur 404 et 500 customisées**.
 
-Ainsi, au niveau du fichier `settings.py` de l'application `lit_review`, on a :
+Ainsi, au niveau du fichier `settings.py` de l'application `lit_review`, on a les paramètres suivants :
 - `ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'http://127.0.0.1:8000/', ]`
 - `media` dans la liste `INSTALLED_APPS`
 - `DEBUG=False`
 - `MEDIA_URL = "/static/media/"`
 - `MEDIA_ROOT = Path.joinpath(BASE_DIR, "media/static/media")`
 
-**Pour passer en configuration de développement**, il faut modifier le fichier `setting.py` comme suit :
+**Pour passer en configuration de développement**, il convient de modifier le fichier `setting.py` comme suit :
 - `DEBUG=True`
 - `MEDIA_URL = "/media/"`
 - `MEDIA_ROOT = Path.joinpath(BASE_DIR, "media")`
 
+puis de déplacer le dossier `lit_review/media/static/media/images` dans `lit_review/media`
+
+et lancer le serveur avec la commande traditionnelle :
+
+`./manage.py runserver`
 
 #### GitFlow du projet
 
@@ -186,7 +196,7 @@ Le projet est organisé en 2 branches :
 
 ### 3) Installation du projet Projet_P9 sur votre machine
 
-Sur votre machine créer un dossier dans lequel vous allez installer le projet.
+Sur votre poste de travail, créer un dossier dans lequel vous allez installer le projet.
 On nommera par exemple ce dossier `projects`. (vous pouvez le nommer autrement, c'est juste pour avoir une référence dans la suite des explications)
 
 Aller sur le dépôt github : https://github.com/yannis971/Projet_P9
@@ -240,7 +250,7 @@ Si l'installation a réussi, la commande vous renverra une ligne comme indiqué 
 
 #### 4.2) Créer un environnement virtuel et l'activer
 
-Se placer à la racine du projet (dossier dans lequel se trouve le fichier run.py) et lancer la commande :
+Se placer à la racine du projet (dossier `projects/Projet_P9`) et lancer la commande :
 
 `python3 -m venv env`
 
@@ -258,7 +268,7 @@ Toujours à la racine du projet, lancer l'une des 2 commandes suivantes :
 
 ### 5) Exécution
 
-Une fois l'environnement virtuel activé et les dépendances du projet Projet_P9 installées, se déplacer dans le répertoire du projet Django `lit_review` en tapant la commande :
+Une fois l'environnement virtuel activé et les dépendances du projet Projet_P9 installées, en étant positionné dans le dossier `projects/Projet_P9`, se déplacer dans le répertoire du projet Django `lit_review` en tapant la commande :
 
 `cd lit_review`
 
@@ -268,7 +278,9 @@ Lancer le serveur Django en tapant la commande :
 
 `./manage.py runserver --insecure`
 
-Avec le paramètre `--insecure`, on permet au serveur de charger les fichiers statiques (CSS, Javscript, images) tout en ayant le paramètre `DEBUG` égal à `False`.
+Avec le paramètre `--insecure`, on permet au serveur de charger les fichiers statiques (CSS, Javscript, images) dans les pages HTML renvoyées au client tout en ayant le paramètre `DEBUG` égal à `False`.
+
+Pour passer en mode développement, voir les instructions au paragraghe 2.8
 
 ![](images_for_readme/runserver.png)
 
@@ -299,20 +311,9 @@ Les autres pages sont à découvrir en lançant le serveur et en vous connectant
 
 Le code de ce projet est sous licence libre **GNU GPL V3**
 
-### 7) Questions/Aide/Support
+### 7) A propos de l'authentification via les réseaux sociaux
 
-En cas de problèmes ou pour questions relatives à ce projet, vous pouvez me contacter via l'un des canaux suivants :
-
-* e-mail : yannis.saliniere@gmail.com
-
-* twitter : https://twitter.com/YSaliniere
-
-* rubrique "issues" du projet github : https://github.com/yannis971/Projet_P9/issues
-
-
-### 8) Annexe portant sur l'authentification via les réseaux sociaux (django-allauth)
-
-La base sqlite du projet est livrée avec un paramètrage fonctionnel pour se connecter via un compte sur les réseaux sociaux Twitter, Google et Github.
+La base sqlite du projet est publiée dans le repository Github avec un paramètrage fonctionnel pour se connecter via un compte actif sur les réseaux sociaux Twitter, Google et Github.
 
 **Ma configuration du site avec l'id 2**
 
@@ -328,11 +329,11 @@ Les 2 autres sont suffixées du nom du fournisseur de l'API d'authentification.
 
 **Pour aller plus loin**
 
-Si vous souhaitez faire des modifications, il vous faut créer un super utiliseur pour accéder à lapplication d'adminsitration de la base de données.
+Si vous souhaitez faire des modifications, il vous faut créer un compte super utiliseur afin d'accéder à l'application d'administration de la base de données via l'url : http://127.0.0.1:8000/admin/
 
-Ensuite, il faudra faire vos propres paramétrages et adaptations du fichier `settings.py`.
+Ensuite, il faudra faire vos propres paramétrages dans la base de données et adaptations du fichier `settings.py`.
 
-Vous trouverez ci-après quelques ressources trouvées sur internet.
+Vous trouverez ci-après quelques ressources sur le sujet trouvées sur internet.
 
 En général, il suffit de faire une recherche avec le mot clé `django-allauth` et le nom du provider ou réseau social de votre choix (Google, FaceBook, Amazon, Instagram, etc...)
 
@@ -347,3 +348,14 @@ https://learndjango.com/tutorials/django-allauth-tutorial
 **Tutoriel django-allauth et FaceBook , Google et Twitter**
 
 https://www.webforefront.com/django/setupdjangosocialauthentication.html
+
+
+### 8) Questions/Aide/Support
+
+En cas de problème ou pour toute question relative à ce projet, vous pouvez me contacter via l'un des canaux suivants :
+
+* e-mail : yannis.saliniere@gmail.com
+
+* twitter : https://twitter.com/YSaliniere
+
+* rubrique "issues" du projet github : https://github.com/yannis971/Projet_P9/issues

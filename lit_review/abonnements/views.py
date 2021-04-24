@@ -5,16 +5,13 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.db.models.functions import Lower
 from django.http import HttpResponseRedirect
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import DeleteView
 
 import json
-
-from django.core import serializers
-from django.http import HttpResponse
-from django.http import JsonResponse
 
 from home.models import UserFollows
 

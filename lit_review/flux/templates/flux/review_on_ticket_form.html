@@ -14,7 +14,7 @@
         <form action="{% url 'flux:review-add-on-ticket' ticket_id %}" method="post" enctype="multipart/form-data">
           {% csrf_token %}
           <fieldset name="ticket">
-            <legend>Livre/Article</legend>
+            <legend><b>Livre/Article</b></legend>
             <div class="form-group">
               {{ review_form.instance.ticket.title }}
             </div>
@@ -28,10 +28,11 @@
             </div>
            </fieldset>
            <fieldset name="review">
-             <legend>Critique</legend>
+             <legend><b>Critique</b></legend>
              {% include 'flux/review_form_fields.html' %}
             </fieldset>
             <div class="form-group text-right">
+              <a href="{% url 'flux:index' %}"><button type="button" class="btn btn-primary" formnovalidate>Abandonner</button></a>
               <button type="submit" class="btn btn-primary">Envoyer</button>
             </div>
         </form>
