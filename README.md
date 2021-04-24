@@ -75,7 +75,7 @@ C'est l'application qui gère la partie inscription, connexion et authentificati
 
 Une fois authentifié, l'utilisateur est redirigé vers l'application `flux` (page d'accueil du site).
 
-Si l'utilisateur n'est pas authentifié et qu'il tente d'accéder à l'une des pages du site, il est alors redirigé vers l'application home afin de se connecter ou de s'inscrire.
+Si l'utilisateur n'est pas authentifié et qu'il tente d'accéder à l'une des pages du site, il est alors redirigé vers l'application `home` afin de se connecter ou de s'inscrire.
 
 #### Remarque
 
@@ -149,7 +149,7 @@ En effet, ce paramétrage permet le stockage et la restitution dans les pages HT
 
 #### 2.8) Organisation du code du projet
 
-Le modèle de données est commun à toutes les applications il est donc dans l'application home.
+Le modèle de données est commun à toutes les applications il est donc dans l'application `home`.
 
 Les fichiers python non utilisés dans une application (tests.py ou models.py) ont été supprimés.
 
