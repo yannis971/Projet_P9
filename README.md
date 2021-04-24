@@ -40,33 +40,50 @@ L'utilisateur du site LITReview doit pouvoir :
 
 ### 2) Architecture du projet
 
+![](images_for_readme/projet_lit_review.png)
+
 #### 2.1) Le projet `lit_rewiew`
 
 C'est le projet au sens "Django" obtenu via la commande :
 
 `django-admin startproject lit_review`
 
-Ce projet vient avec 2 fichiers :
-- db.sqlite3
-- manage.py : script python contenant l'ensemble des opérations d'administration du site (création d'une , modification base de données, migration pour "synchroniser" le model avec la base de données etc..)
+Il correspond au dossier `lit_review` contenu dans le répertoire `Projet_P9`.
 
+Ce projet vient avec 2 fichiers :
+- `db.sqlite3`: le fichier base de données fourni par défaut
+- `manage.py` : script python contenant l'ensemble des opérations d'administration du site (création d'une , modification base de données, migration pour "synchroniser" le model avec la base de données etc..)
+
+A l'intérieur de ce dossier projet, se trouvent les applications.
 
 #### 2.2) L'application `lit_review`
 
+![](images_for_readme/application_lit_review.png)
+
 Elle est créée automatiquement lors de la création dy projet `lit_review`.
 
-Elle contient notamments les 2 fichiers :
+Elle contient notamment les 2 fichiers :
 
-- settings.py : dans lequel se trouve l'ensemble de la configuration du projet
-- urls.py : dans lequel on définit l'ensemble des urls autorisées avec leur redirection dans les fichiers urls des applications concernées
+- `settings.py` : dans lequel se trouve l'ensemble de la configuration du projet
+- `urls.py` : dans lequel on définit l'ensemble des urls autorisées avec leur redirection dans les fichiers urls des applications concernées
 
 #### 2.2) L'application `home`
 
+![](images_for_readme/application_home.png)
+
 C'est l'application qui gère la partie inscription, connexion et authentification d'un utilisateur.
+
 Une fois authentifié, l'utilisateur est redirigé vers l'application flux (page d'accueil du site).
+
 Si l'utilisateur n'est pas authentifié et qu'il tente d'accéder à une page du site, il est alors redirigé vers l'application home afin de se connecter ou s'inscrire.
 
+#### Remarque
+
+A l'exception des images uploadées qui sont stockées dans le dossier `media` (voir plus bas), toutes les ressources statiques (css, javascript, icones, source Bootstrap) sont stockées dans le dossier `home/static/home`
+
 #### 2.3) L'application `flux`
+
+![](images_for_readme/application_flux.png)
 
 Cette application gère les actions de l'utilisateur dans la page flux :
 - consulter un flux contenant les derniers tickets et les commentaires des utilisateurs qu'il suit, classés par ordre chronologique, les plus récents en premier ;
@@ -74,7 +91,7 @@ Cette application gère les actions de l'utilisateur dans la page flux :
 - créer des critiques en réponse à des tickets ;
 - créer des commentaires qui ne sont pas en réponse à un ticket.
 
-Le nombre de posts affichés par page de l'application `flux` est défini dans le fichier `lit_rewiew/settings.py` dans le paramètre FLUX_NB_POSTS_BY_PAGE.
+Le nombre de posts affichés par page de l'application `flux` est défini dans le fichier `lit_rewiew/settings.py` dans le paramètre `FLUX_NB_POSTS_BY_PAGE`.
 Vous pouvez modifier ce paramètre à votre guise en veillant à mettre en entier > 0 :
 
 `FLUX_NB_POSTS_BY_PAGE = 3`
@@ -83,15 +100,19 @@ Une fois un ticket ou une critique créé, l'utilisateur est redirigé vers l'ap
 
 #### 2.4) L'application `posts`
 
+![](images_for_readme/application_posts.png)
+
 Cette application permet à l'utilisateur de voir, modifier et supprimer ses propres tickets et commentaires
 
-Le nombre de posts affichés par page de l'application `posts`est défini dans le fichier `lit_rewiew/settings.py` dans le paramètre POSTS_NB_POSTS_BY_PAGE.
+Le nombre de posts affichés par page de l'application `posts`est défini dans le fichier `lit_rewiew/settings.py` dans le paramètre `POSTS_NB_POSTS_BY_PAGE`.
 
-Vous pouvez modifier ce paramètre à votre guise en veillant à mettre en entier > 0 :
+Vous pouvez le modifier en veillant à mettre en entier > 0 :
 
 `POSTS_NB_POSTS_BY_PAGE = 3`
 
 #### 2.5) L'application `abonnements`
+
+![](images_for_readme/application_abonnements.png)
 
 Cette application permet de :
 
@@ -104,19 +125,21 @@ Le script de gestion de la barre de recherche se nomme `search_users.js` et se t
 
 Ce script fait appel aux données coté serveur via l'API Fetch en appelant l'url "http://127.0.0.1:8000/abonnements/fetch/users/"
 
-Cette url "pointe" vers la fonction fetchUsers dans abbonnements.views et renvoie un JsonResponse avec la liste des id et username des utilisateurs inscrits sur le site.
+Cette url "pointe" vers la fonction `fetchUsers` dans `abonnements.views` et renvoie un `JsonResponse` avec la liste des id et username des utilisateurs inscrits sur le site.
 
-Cette fonction fetchUsers n'est accessible que si l'utilisateur est authentifié.
+Cette fonction `fetchUsers` n'est accessible que si l'utilisateur est authentifié.
 
 #### 2.6) Le dossier `media`
 
-Ce n'est pas une application dans le sens "Django" du terme.
+![](images_for_readme/dossier_media.png)
 
-Ce dossier a été créé manuellement et non via la commande :
+Ce n'est pas une application au sens "Django" du terme.
+
+Ce dossier a été créé manuellement et non pas via la commande :
 
 `./manage.py startapp media`
 
-Toutefois au niveau du fichier settings.py comme on est déployé en mode production (`DEBUG=False`), il faut déclarer de dossier `media`dans la liste des applications installées `INSTALLED_APPS` afin de permettre le stockage et la restitution dans les pages HTML des images uploadées dans `media/static/media/images`
+Toutefois, au niveau du `fichier settings.py`, comme on est déployé en mode production (`DEBUG=False`), il convient de déclarer ce dossier `media`dans la liste des applications installées `INSTALLED_APPS` afin de permettre le stockage et la restitution dans les pages HTML des images uploadées dans `media/static/media/images`
 
 #### Organisation du code du projet
 
@@ -126,7 +149,7 @@ Les fichiers python non utilisés dans une application (tests.py ou models.py) o
 
 Les fichiers statiques (CSS, Javascript, Boostrap) se trouvent dans `home/static/home`.
 
-Chaque application a son propre répertoire  `templates` avec possibilité
+Chaque application a son propre répertoire `templates` avec possibilité
 exemple :
 l'application posts'
 la barre de navigation navbar.html se trouve uniquement dans home uniquement
@@ -147,7 +170,7 @@ Ainsi, au niveau du fichier `settings.py` de l'application `lit_review`, on a :
 - `MEDIA_URL = "/static/media/"`
 - `MEDIA_ROOT = Path.joinpath(BASE_DIR, "media/static/media")`
 
-Pour passer en configuration de développement, il faut modifier le fichier setting.py comme suit :
+**Pour passer en configuration de développement**, il faut modifier le fichier `setting.py` comme suit :
 - `DEBUG=True`
 - `MEDIA_URL = "/media/"`
 - `MEDIA_ROOT = Path.joinpath(BASE_DIR, "media")`
@@ -172,7 +195,7 @@ Pour l'installation, il y a 2 méthodes possibles.
 
 #### 3.1) Première méthode : Téléchargement du fichier zip
 
-![](images/p6_img_02.png)
+![](images_for_readme/depot_github.png)
 
 Dans l'onglet **<> Code** de la page ci-dessus, cliquer sur le bouton **Code** puis sur **Download ZIP**
 
@@ -235,25 +258,29 @@ Toujours à la racine du projet, lancer l'une des 2 commandes suivantes :
 
 ### 5) Exécution
 
-Une fois l'environnement l'environnement virtuel activé et les dépendances du projet Projet_P9 installées, se déplacer dans le répertoire du projet Django `lit_review` en tapant la commande :
+Une fois l'environnement virtuel activé et les dépendances du projet Projet_P9 installées, se déplacer dans le répertoire du projet Django `lit_review` en tapant la commande :
 
 `cd lit_review`
 
-Dans ce dossier, on trouve le fameux fichier `manage.py` qui permet de gérer le site.
+Dans ce dossier, on trouve le fameux fichier `manage.py` qui permet d'administrer le site.
 
-Lancer le serveur en tapant la commande :
+Lancer le serveur Django en tapant la commande :
 
 `./manage.py runserver --insecure`
 
-Avec le paramètre `--insecure`, on permet au serveur Django de charger les fichiers statiques tout en ayant le paramètre `DEBUG` égal à `False`.
+Avec le paramètre `--insecure`, on permet au serveur de charger les fichiers statiques (CSS, Javscript, images) tout en ayant le paramètre `DEBUG` égal à `False`.
 
 ![](images_for_readme/runserver.png)
 
 Une fois le serveur démarré, ouvrir un navigateur et taper l'url : http://127.0.0.1:8000/
 
-La page de connexion au site web LITReview s'affiche dans votre navigateur.
+La page de connexion au site web LITReview s'affiche alors dans votre navigateur.
+
+Il suffit de vous connecter ou vous s'inscrire si vous n'avez pas de compte sur ce site !
 
 Ci-après quelques captures d'écran de la page de login.
+
+Les autres pages sont à découvrir en lançant le serveur et en vous connectant au site !
 
 **Mode Mobile**
 
