@@ -4,7 +4,7 @@
 
 Ce projet consiste à développer un site web pour le compte de la start-up LITReview permettant à une communauté d'utilisateurs de consulter ou de solliciter une critique de livres à la demande.
 
-#### Les cas d'utilisation de l'application
+#### 1.1) Les cas d'utilisation de l'application
 L'utilisateur du site LITReview doit pouvoir :
 - se connecter et s’inscrire – le site ne doit pas être accessible à un utilisateur non connecté ;
   - pour cette fonctionnalité, j'ai ajouté l'autentification via 3 médias sociaux (Twiter, Google et Github)
@@ -20,12 +20,12 @@ L'utilisateur du site LITReview doit pouvoir :
 - voir qui il suit et suivre qui il veut ;
 - cesser de suivre un utilisateur.
 
-#### Frameworks utilisés
+#### 1.2) Frameworks utilisés
 
 * **Django** : pour le développement de sites web en Python
 * **Bootstrap** : pour concevoir des sites web "responsive" avec des thèmes intégrés
 
-#### Langages utilisés
+#### 1.3) Langages utilisés
 
 * **Python** : le langage de programmation interprété, multi-paradigmes et multiplateformes (classé N° 3 à l'index TIOBE en avril 2021), pour impléter la logique de l'application
 * **HTML** : pour structurer les pages du site
@@ -33,7 +33,7 @@ L'utilisateur du site LITReview doit pouvoir :
 * **Javascript + API Fetch (AJAX)** : pour dynamiser le rendu HTML et raffraichir les données affichées côté client en interrogeant le serveur
 * **Jinja** : langage de "templating" pour Python (pour faire simple c'est du Python dans des pages HTML)
 
-#### Packages supplémentaires
+#### 1.4) Packages supplémentaires
 
 * **django-allauth** : package Django réutilisable qui permet à la fois l'autentification en "local" (via l'application web développée) et via les médias sociaux  
 * **Pillow** : package permettant la gestion des images en Python
@@ -288,24 +288,55 @@ Une fois le serveur démarré, ouvrir un navigateur et taper l'url : http://127.
 
 La page de connexion au site web LITReview s'affiche alors dans votre navigateur.
 
-Il suffit de vous connecter ou vous s'inscrire si vous n'avez pas de compte sur ce site !
+En étant sur la page de connexion, si vous n'avez pas de compte pour vous connecter, cliquer sur le bouton **S'INSCRIRE**.
 
-Ci-après quelques captures d'écran de la page de login.
+Sur le formulaire d'inscription, renseigner un nom d'utilisateur et un  mot de passe (le champ e-mail est facultatif sauf si vous souhaitez utiliser par la suite la connexion via les médias sociaux).
+
+Confirmer le mot de passe puis cliquer sur le bouton S'INSCRIRE.
+
+Votre compte utilisateur sera créé et vous serez redirigé vers la page d'accueil du site.
+
+**Ci-après quelques captures d'écran de la page de login et du process d'incription.**
 
 Les autres pages sont à découvrir en lançant le serveur et en vous connectant au site !
 
-**Mode Mobile**
+**Page login : Mode Mobile**
 
 ![](images_for_readme/mobile_01.png)
 
 ![](images_for_readme/mobile_02.png)
 
-**Mode Desktop (affichage plein écran)**
+**Page login : Mode Desktop (affichage plein écran)**
 
 ![](images_for_readme/desktop_01.png)
 
 ![](images_for_readme/desktop_02.png)
 
+**Process d'inscription, de navigation et de déconnexion**
+
+**L'utilisateur renseigne puis valide le formulaire d'inscription**
+
+![](images_for_readme/inscription_01.png)
+
+**Une fois son compte créé et validé, il est redirigé vers la page FLUX.**
+
+![](images_for_readme/inscription_02.png)
+
+**Le nouvel utilisateur consulte la page POSTS**
+
+![](images_for_readme/inscription_03.png)
+
+**Le nouvel utilisateur consulte la page ABONNEMENTS**
+
+![](images_for_readme/inscription_04.png)
+
+**Le nouvel utilisateur se déconnecte**
+
+![](images_for_readme/inscription_05.png)
+
+**Les autres fonctionnalités ne sont pas décrites ici**
+
+**Pour les tester, voir le paragraghe "1.1) Les cas d'utilisation de l'application" en tout du fichier README.md**
 
 ### 6) Licence
 

@@ -26,6 +26,7 @@ def loginUser(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
+                messages.success(request, f"Bienvenue {user.username} !")
                 return HttpResponseRedirect(reverse('home:index'))
             else:
                 messages.info(request, "Nom d'utilisateur ou mot de passe invalide")
@@ -54,6 +55,7 @@ def registerUser(request):
                 user = authenticate(request, username=username, password=password)
                 if user is not None:
                     login(request, user)
+                    messages.success(request, f"Bienvenue {user.username} !")
                     return HttpResponseRedirect(reverse('home:index'))
                 else:
                     messages.info(request, "Nom d'utilisateur ou mot de passe invalide")
@@ -66,7 +68,7 @@ def logoutUser(request):
     """
     Fonction permettant de se déconnecter du site
     """
-    messages.success(request, "Vous êtes déconnecté")
+    messages.success(request, f"{request.user.username}, vous êtes maintenant déconnecté(e) !")
     logout(request)
     return HttpResponseRedirect(reverse('home:login'))
 
