@@ -47,23 +47,24 @@ C'est le projet au sens "Django" obtenu via la commande :
 `django-admin startproject lit_review`
 
 Ce projet vient avec 2 fichiers :
-- db.sqlite3
-- manage.py : script python contenant l'ensemble des opérations d'administration du site (création d'une , modification base de données, migration pour "synchroniser" le model avec la base de données etc..)
-
+- `db.sqlite3`: le fichier base de données fourni par défaut
+- `manage.py` : script python contenant l'ensemble des opérations d'administration du site (création d'une , modification base de données, migration pour "synchroniser" le model avec la base de données etc..)
 
 #### 2.2) L'application `lit_review`
 
 Elle est créée automatiquement lors de la création dy projet `lit_review`.
 
-Elle contient notamments les 2 fichiers :
+Elle contient notamment les 2 fichiers :
 
-- settings.py : dans lequel se trouve l'ensemble de la configuration du projet
-- urls.py : dans lequel on définit l'ensemble des urls autorisées avec leur redirection dans les fichiers urls des applications concernées
+- `settings.py` : dans lequel se trouve l'ensemble de la configuration du projet
+- `urls.py` : dans lequel on définit l'ensemble des urls autorisées avec leur redirection dans les fichiers urls des applications concernées
 
 #### 2.2) L'application `home`
 
 C'est l'application qui gère la partie inscription, connexion et authentification d'un utilisateur.
+
 Une fois authentifié, l'utilisateur est redirigé vers l'application flux (page d'accueil du site).
+
 Si l'utilisateur n'est pas authentifié et qu'il tente d'accéder à une page du site, il est alors redirigé vers l'application home afin de se connecter ou s'inscrire.
 
 #### 2.3) L'application `flux`
@@ -74,7 +75,7 @@ Cette application gère les actions de l'utilisateur dans la page flux :
 - créer des critiques en réponse à des tickets ;
 - créer des commentaires qui ne sont pas en réponse à un ticket.
 
-Le nombre de posts affichés par page de l'application `flux` est défini dans le fichier `lit_rewiew/settings.py` dans le paramètre FLUX_NB_POSTS_BY_PAGE.
+Le nombre de posts affichés par page de l'application `flux` est défini dans le fichier `lit_rewiew/settings.py` dans le paramètre `FLUX_NB_POSTS_BY_PAGE`.
 Vous pouvez modifier ce paramètre à votre guise en veillant à mettre en entier > 0 :
 
 `FLUX_NB_POSTS_BY_PAGE = 3`
@@ -85,9 +86,9 @@ Une fois un ticket ou une critique créé, l'utilisateur est redirigé vers l'ap
 
 Cette application permet à l'utilisateur de voir, modifier et supprimer ses propres tickets et commentaires
 
-Le nombre de posts affichés par page de l'application `posts`est défini dans le fichier `lit_rewiew/settings.py` dans le paramètre POSTS_NB_POSTS_BY_PAGE.
+Le nombre de posts affichés par page de l'application `posts`est défini dans le fichier `lit_rewiew/settings.py` dans le paramètre `POSTS_NB_POSTS_BY_PAGE`.
 
-Vous pouvez modifier ce paramètre à votre guise en veillant à mettre en entier > 0 :
+Vous pouvez le modifier en veillant à mettre en entier > 0 :
 
 `POSTS_NB_POSTS_BY_PAGE = 3`
 
@@ -104,19 +105,19 @@ Le script de gestion de la barre de recherche se nomme `search_users.js` et se t
 
 Ce script fait appel aux données coté serveur via l'API Fetch en appelant l'url "http://127.0.0.1:8000/abonnements/fetch/users/"
 
-Cette url "pointe" vers la fonction fetchUsers dans abbonnements.views et renvoie un JsonResponse avec la liste des id et username des utilisateurs inscrits sur le site.
+Cette url "pointe" vers la fonction `fetchUsers` dans `abonnements.views` et renvoie un `JsonResponse` avec la liste des id et username des utilisateurs inscrits sur le site.
 
-Cette fonction fetchUsers n'est accessible que si l'utilisateur est authentifié.
+Cette fonction `fetchUsers` n'est accessible que si l'utilisateur est authentifié.
 
 #### 2.6) Le dossier `media`
 
-Ce n'est pas une application dans le sens "Django" du terme.
+Ce n'est pas une application au sens "Django" du terme.
 
-Ce dossier a été créé manuellement et non via la commande :
+Ce dossier a été créé manuellement et non pas via la commande :
 
 `./manage.py startapp media`
 
-Toutefois au niveau du fichier settings.py comme on est déployé en mode production (`DEBUG=False`), il faut déclarer de dossier `media`dans la liste des applications installées `INSTALLED_APPS` afin de permettre le stockage et la restitution dans les pages HTML des images uploadées dans `media/static/media/images`
+Toutefois, au niveau du `fichier settings.py`, comme on est déployé en mode production (`DEBUG=False`), il convient de déclarer ce dossier `media`dans la liste des applications installées `INSTALLED_APPS` afin de permettre le stockage et la restitution dans les pages HTML des images uploadées dans `media/static/media/images`
 
 #### Organisation du code du projet
 
@@ -172,7 +173,7 @@ Pour l'installation, il y a 2 méthodes possibles.
 
 #### 3.1) Première méthode : Téléchargement du fichier zip
 
-![](images/p6_img_02.png)
+![](images_for_readme/depot_github.png)
 
 Dans l'onglet **<> Code** de la page ci-dessus, cliquer sur le bouton **Code** puis sur **Download ZIP**
 
